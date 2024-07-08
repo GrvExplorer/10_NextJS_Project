@@ -9,6 +9,7 @@
     "lint": "next lint",
     "push": "dotenv -e .env.local prisma db push",
     "client": "dotenv -e .env.local prisma generate",
+    "studio": "dotenv -e .env.local prisma studio",
     "postinstall": "prisma generate"
   },
   "dependencies": {
