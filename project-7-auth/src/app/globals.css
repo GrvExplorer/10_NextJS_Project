@@ -2,7 +2,7 @@
   @tailwind components;
   @tailwind utilities;
 
-@layer base {
+  @layer base {
     :root {
       --background: 0 0% 100%;
       --foreground: 224 71.4% 4.1%;
@@ -59,7 +59,7 @@
     }
   }
 
-@layer base {
+  @layer base {
     * {
       @apply border-border;
     }
@@ -67,33 +67,3 @@
       @apply bg-background text-foreground;
     }
   }
-
-@layer components {
-  .btn {
-    @apply px-4 py-2 rounded-md transition-all cursor-pointer font-medium active:transform-gpu;
-  }
-}
-
-@layer utilities {
-  .btn-cta {
-  @apply bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#877eff_50%,#E2CBFF_100%)]
-}
-.btn-primary {
-  @apply btn bg-primary text-primary-content focus:ring-2 focus:ring-offset-2 focus:ring-primary;
-}
-.btn-base {
-  @apply btn bg-base-content text-base-100 focus:ring-2 focus:ring-offset-2 focus:ring-primary;
-}
-.btn-primary-outline {
-  @apply border border-primary bg-primary-content text-primary;
-}
-.btn-base-outline {
-  @apply btn border border-base-content bg-base-100 text-base-content hover:bg-base-content hover:text-base-200;
-}
-.btn-primary-ghost {
-  @apply btn text-primary border border-transparent hover:ring-2 hover:ring-primary;
-}
-.btn-base-ghost {
-  @apply hover:bg-base-300 text-base-content btn;
-}
-}
