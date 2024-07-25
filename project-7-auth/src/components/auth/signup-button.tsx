@@ -2,22 +2,24 @@
 
 import { useRouter } from "next/navigation";
 
-interface SignupButtonProps {
+interface SignUpButtonProps {
   children: React.ReactNode;
   mode?: "modal" | "redirect";
   asChild?: boolean;
 }
 
-export default function SignupButton({
+export default function SignUpButton({
   children,
   mode = "redirect",
   asChild,
-}: SignupButtonProps) {
+}: SignUpButtonProps) {
   const router = useRouter();
 
   const onClick = () => {
-    console.log("SIGNIN BUTTON CLICKED");
-    router.push("/auth/sign-up");
+    if (process.env.NEXT_PUBLIC_SIGN_UP_URL) {
+      router.push(process.env.NEXT_PUBLIC_SIGN_UP_URL);
+    }
+    router.push("/sign-up");
   };
 
   if (mode === "modal") {

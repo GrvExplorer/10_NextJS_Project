@@ -19,7 +19,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const SignupForm = () => {
+export const SignUpForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [successMessage, setSuccessMessage] = useState<string | undefined>("");
 
@@ -58,7 +58,7 @@ export const SignupForm = () => {
         label: "already have an account?",
         hrefText: "Login",
       }}
-      backButtonHref="/auth/sign-in"
+      backButtonHref={process.env.NEXT_PUBLIC_SIGN_IN_URL || "/sign-in"}
       showSocial
     >
       <Form {...form}>
@@ -74,8 +74,10 @@ export const SignupForm = () => {
                 <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input
-                  type="text"
-                  placeholder="Enter your username" {...field} />
+                    type="text"
+                    placeholder="Enter your username"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

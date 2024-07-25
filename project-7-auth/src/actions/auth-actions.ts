@@ -10,7 +10,6 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
     console.log("error ");
     return { success: false, message: "Something went wrong" };
   }
-  console.log("logged in successfully");
 
   return { success: true, message: "logged in successfully" };
 };
@@ -29,9 +28,9 @@ export const signup = async (values: z.infer<typeof signupSchema>) => {
 export const logout = async () => {
   await signOut({
     redirect: true,
-    redirectTo: process.env.REDIRECT_URL_LOGOUT,
+    redirectTo: process.env.NEXT_PUBLIC_LOGOUT_REDIRECT_URL || "/sign-in",
   });
-  console.log("logged out successfully");
+
   return { success: true, message: "logged out successfully" };
 };
 
@@ -39,28 +38,27 @@ export const logout = async () => {
 export const github = async () => {
   const res = await signIn("github", {
     redirect: true,
-    redirectTo: process.env.REDIRECT_URL_SIGN,
+    redirectTo: process.env.NEXT_PUBLIC_SOCIAL_SIGN_IN_REDIRECT_URL || "/",
   });
   console.log(res);
   if (!res) {
-    console.log("error");
+
     return { success: false, message: "Something went wrong" };
   }
 
   console.log("signed up successfully");
   return { success: true, message: "signed up successfully" };
 };
+
 export const google = async () => {
   const res = await signIn("google", {
     redirect: true,
-    redirectTo: process.env.REDIRECT_URL_SIGN,
+    redirectTo: process.env.NEXT_PUBLIC_SOCIAL_SIGN_IN_REDIRECT_URL || "/",
   });
   console.log(res);
   if (!res) {
-    console.log("error");
     return { success: false, message: "Something went wrong" };
   }
 
-  console.log("signed up successfully");
   return { success: true, message: "signed up successfully" };
 };

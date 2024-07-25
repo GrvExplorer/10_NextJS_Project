@@ -1,9 +1,8 @@
 "use client";
 
 import { logout } from "@/actions/auth-actions";
-import { redirect, useRouter } from "next/navigation";
 
-interface SignupButtonProps {
+interface SignUpButtonProps {
   children: React.ReactNode;
   mode?: "modal" | "redirect";
   asChild?: boolean;
@@ -13,12 +12,9 @@ export default function LogoutButton({
   children,
   mode = "redirect",
   asChild,
-}: SignupButtonProps) {
-  const router = useRouter();
-
+}: SignUpButtonProps) {
   const onClick = async () => {
-    await logout()
-    console.log("LOGOUT BUTTON CLICKED");
+    await logout();
   };
 
   if (mode === "modal") {

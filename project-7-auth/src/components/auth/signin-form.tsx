@@ -1,12 +1,7 @@
 "use client";
 import { login } from "@/actions/auth-actions";
-import { CardWrapper } from "@/components/ui/card-wrapper";
-import { loginSchema } from "@/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { CardWrapper } from "@/components/ui/card-wrapper";
 import {
   Form,
   FormControl,
@@ -18,8 +13,13 @@ import {
 import FormError from "@/components/ui/form-error";
 import FormSuccess from "@/components/ui/form-success";
 import { Input } from "@/components/ui/input";
+import { loginSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-export const LoginForm = () => {
+export const SignInForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>("");
   const [successMessage, setSuccessMessage] = useState<string | undefined>("");
 
@@ -56,7 +56,7 @@ export const LoginForm = () => {
         label: "don't have an account?",
         hrefText: "Sign up",
       }}
-      backButtonHref="/auth/sign-up"
+      backButtonHref={process.env.NEXT_PUBLIC_SIGN_UP_URL || "/sign-up"}
       showSocial
     >
       <Form {...form}>

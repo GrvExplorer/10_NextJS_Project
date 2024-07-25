@@ -2,22 +2,30 @@
 
 import { useRouter } from "next/navigation";
 
-interface LoginButtonProps {
+interface SignInButtonProps {
   children: React.ReactNode;
   mode?: "modal" | "redirect";
   asChild?: boolean;
 }
 
-export default function LoginButton({
+export default function SignInButton({
   children,
   mode = "redirect",
   asChild,
-}: LoginButtonProps) {
+}: SignInButtonProps) {
   const router = useRouter();
 
   const onClick = () => {
-    console.log("LOGIN BUTTON CLICKED");
-    router.push("/auth/sign-in");
+    if (process.env.NEXT_PUBLIC_SIGN_IN_URL) {
+      router.push(process.env.NEXT_PUBLIC_SIGN_IN_URL);
+    }
+
+    console.log(
+      "🚀 ~ file: login-button.tsx:22 ~ onClick ~ process.env.NEXT_PUBLIC_SIGN_IN_URL:",
+      process.env.NEXT_PUBLIC_SIGN_IN_URL
+    );
+
+    router.push("/sign-in");
   };
 
   if (mode === "modal") {
