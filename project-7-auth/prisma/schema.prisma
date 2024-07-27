@@ -15,10 +15,11 @@ enum UserRoles {
 model user {
   id            String    @id @default(cuid())
   name          String?
+  username      String?   @unique
   email         String    @unique
   emailVerified DateTime?
   image         String?
-  password      String
+  password      String?
   role          UserRoles @default(USER)
   accounts      account[]
 

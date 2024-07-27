@@ -1,26 +1,83 @@
 "use server";
 
 import { signIn, signOut } from "@/auth";
+import { db } from "@/db";
 import { loginSchema, signupSchema } from "@/schemas";
+import bcrypt from "bcryptjs";
+import { AuthError } from "next-auth";
 import { z } from "zod";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
   const validated = loginSchema.safeParse(values);
   if (!validated.success) {
-    console.log("error ");
     return { success: false, message: "Something went wrong" };
   }
 
-  return { success: true, message: "logged in successfully" };
+  const { email, password } = validated.data;
+
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: true,
+      redirectTo: process.env.NEXT_PUBLIC_SIGN_IN_REDIRECT_URL || "/",
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return { success: false, message: "Invalid credentials" };
+        default:
+          return { success: false, message: "Something went wrong!" };
+      }
+    }
+    throw error;
+  }
 };
 
 export const signup = async (values: z.infer<typeof signupSchema>) => {
   const validated = signupSchema.safeParse(values);
   if (!validated.success) {
-    console.log("error ");
     return { success: false, message: "Something went wrong" };
   }
-  console.log("signed up successfully");
+
+  // FIXME: Generate a good salt
+
+  const getUser = await db.user.findFirst({
+    where: {
+      email: validated.data.email,
+    },
+  });
+
+  if (getUser) {
+    const match = await login({
+      email: validated.data.email,
+      password: validated.data.password,
+    });
+
+    return {
+      success: false,
+      message: "User already exists",
+    };
+  }
+
+  const hashPassword = await bcrypt.hash(validated.data.password, 10);
+
+  // TODO: username adding
+  const createUser = await db.user.create({
+    data: {
+      name: validated.data.name,
+      email: validated.data.email,
+      password: hashPassword,
+    },
+  });
+  if (!createUser)
+    return {
+      success: false,
+      message: "Something went wrong",
+    };
+
+  // TODO: Send verification token email;
 
   return { success: true, message: "signed up successfully" };
 };
@@ -40,13 +97,10 @@ export const github = async () => {
     redirect: true,
     redirectTo: process.env.NEXT_PUBLIC_SOCIAL_SIGN_IN_REDIRECT_URL || "/",
   });
-  console.log(res);
   if (!res) {
-
     return { success: false, message: "Something went wrong" };
   }
 
-  console.log("signed up successfully");
   return { success: true, message: "signed up successfully" };
 };
 
@@ -55,7 +109,6 @@ export const google = async () => {
     redirect: true,
     redirectTo: process.env.NEXT_PUBLIC_SOCIAL_SIGN_IN_REDIRECT_URL || "/",
   });
-  console.log(res);
   if (!res) {
     return { success: false, message: "Something went wrong" };
   }

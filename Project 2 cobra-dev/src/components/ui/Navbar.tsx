@@ -38,7 +38,7 @@ export default function Navbar() {
               <AdminButton />
               <li>
                 <div className="flex items-center gap-4">
-                  {/* TODO: On sign out redirect url check configuration present and stay in that page */}
+                  {/* TODO: On sign our redirect url check configuration present and stay in that page */}
                   {/* <UserButton afterSignOutUrl="/auth-callback" /> */}
                   {/* TODO: Data on Deleting account */}
                   <UserButton />
