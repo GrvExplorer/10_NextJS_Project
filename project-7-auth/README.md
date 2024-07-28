@@ -21,6 +21,13 @@
   - option credentials
   - option magic link 
   - without db 
+  
+  - Error handel for social and credentials 
+  - Email verification
+  - reset password 
+  - 2FA
+  - Manage Account
+  
 
 # Acknowledgments
 

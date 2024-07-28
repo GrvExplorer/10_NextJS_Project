@@ -39,10 +39,10 @@ export const SignInForm = () => {
 
     startTransition(() => {
       login(data).then((data) => {
-        if (data.success) {
-          setSuccessMessage(data.message);
+        if (data?.success) {
+          setSuccessMessage(data?.message);
         } else {
-          setErrorMessage(data.message);
+          setErrorMessage(data?.message);
         }
       });
     });

@@ -16,23 +16,27 @@ export function Social() {
       <div className="flex items-center w-full gap-x-2">
         <Button
           size={"lg"}
-          className="w-full"
+          className="w-full flex gap-2 text-slate-600"
           variant={"outline"}
           onClick={async () => {
             await google();
+            console.log("clicked");
+            
           }}
         >
           <FcGoogle className="text-2xl" />
+          Google
         </Button>
         <Button
           size={"lg"}
-          className="w-full"
+          className="w-full flex gap-2 text-slate-600"
           variant={"outline"}
           onClick={async () => {
             await github();
           }}
         >
           <FaGithub className="text-2xl" />
+          Github
         </Button>
 
         {/* TODO: Be be implemented this https://authjs.dev/guides/pages/signin */}

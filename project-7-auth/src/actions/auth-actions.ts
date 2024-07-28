@@ -22,6 +22,9 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
       redirect: true,
       redirectTo: process.env.NEXT_PUBLIC_SIGN_IN_REDIRECT_URL || "/",
     });
+
+    return { success: true, message: "logged in successfully" };
+
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -50,10 +53,10 @@ export const signup = async (values: z.infer<typeof signupSchema>) => {
   });
 
   if (getUser) {
-    const match = await login({
-      email: validated.data.email,
-      password: validated.data.password,
-    });
+    // const match = await login({
+    //   email: validated.data.email,
+    //   password: validated.data.password,
+    // });
 
     return {
       success: false,
@@ -93,25 +96,50 @@ export const logout = async () => {
 
 // login or signup with socials or Oauth
 export const github = async () => {
-  const res = await signIn("github", {
-    redirect: true,
-    redirectTo: process.env.NEXT_PUBLIC_SOCIAL_SIGN_IN_REDIRECT_URL || "/",
-  });
-  if (!res) {
-    return { success: false, message: "Something went wrong" };
-  }
+  try {
+    const res = await signIn("github", {
+      redirect: true,
+      redirectTo: process.env.NEXT_PUBLIC_SOCIAL_SIGN_IN_REDIRECT_URL || "/",
+    });
 
-  return { success: true, message: "signed up successfully" };
+    if (!res) {
+      return { success: false, message: "Something went wrong" };
+    }
+    return { success: true, message: "signed up successfully" };
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "DuplicateConditionalUI":
+          return { success: false, message: "User already exists" };
+        default:
+          return { success: false, message: "Something went wrong!" };
+      }
+    }
+    throw error;
+  }
 };
 
 export const google = async () => {
-  const res = await signIn("google", {
-    redirect: true,
-    redirectTo: process.env.NEXT_PUBLIC_SOCIAL_SIGN_IN_REDIRECT_URL || "/",
-  });
-  if (!res) {
-    return { success: false, message: "Something went wrong" };
+  try {
+    const res = await signIn("google", {
+      redirect: true,
+      redirectTo: process.env.NEXT_PUBLIC_SOCIAL_SIGN_IN_REDIRECT_URL || "/",
+    });
+    if (!res) {
+      return { success: false, message: "Something went wrong" };
+    }
+    console.log('not able to sign in with google');
+    
+    return { success: true, message: "signed up successfully" };
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "DuplicateConditionalUI":
+          return { success: false, message: "User already exists" };
+        default:
+          return { success: false, message: "Something went wrong!" };
+      }
+    }
+    throw error;
   }
-
-  return { success: true, message: "signed up successfully" };
 };

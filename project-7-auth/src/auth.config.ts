@@ -12,6 +12,8 @@ export default {
       authorize: async (credentials) => {
         const validated = loginSchema.safeParse(credentials);
         if (!validated.success) {
+          console.log('validation error');
+          
           return { success: false, message: "Something went wrong" };
         }
 

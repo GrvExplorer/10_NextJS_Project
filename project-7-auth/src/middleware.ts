@@ -1,5 +1,6 @@
 import authConfig from "@/auth.config";
 import { apiAuthPrefix, authRoutes, publicRoutes } from "@/routes";
+import { NextApiRequest } from "next";
 import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -8,11 +9,10 @@ const { auth } = NextAuth(authConfig);
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const currentPath = req.nextUrl.pathname;
-  const isApiAuthPrefix = apiAuthPrefix.includes(currentPath)
+  const isApiAuthPrefix = currentPath.startsWith(apiAuthPrefix)
   const isAuthRoutes = authRoutes.includes(currentPath)
   const isPublicRoutes = publicRoutes.includes(currentPath)
-  
-  console.log("🚀 ~ file: middleware.ts:10 ~ auth ~ isLoggedIn:", isLoggedIn)
+
   if (isApiAuthPrefix) return NextResponse.next();
 
   if (isAuthRoutes && isLoggedIn)
@@ -22,12 +22,16 @@ export default auth((req) => {
 
   if (isPublicRoutes) return NextResponse.next();
 
-  if (!isLoggedIn && !isAuthRoutes)
+  if (!isLoggedIn && !isAuthRoutes && !isPublicRoutes) {    
     return NextResponse.redirect(
       new URL(process.env.NEXT_PUBLIC_SIGN_IN_URL || "/sign-in", req.nextUrl)
     );
-
+  }
+  
+  return null
 });
+
+
 
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],

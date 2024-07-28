@@ -13,8 +13,8 @@ export default function LogoutButton({
   mode = "redirect",
   asChild,
 }: SignUpButtonProps) {
-  const onClick = async () => {
-    await logout();
+  const onClick = () => {
+    logout();
   };
 
   if (mode === "modal") {
