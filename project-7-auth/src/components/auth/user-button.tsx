@@ -1,4 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+"use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,64 +8,47 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import { useCurrentUser } from "@/hooks/auth.hooks";
+import { notFound } from "next/navigation";
+import { useState } from "react";
 import { FcSettings } from "react-icons/fc";
 import { MdLogout } from "react-icons/md";
+import UserAvatar from "../custom ui/user-avatar";
 import LogoutButton from "./logout-button";
-import { currentUser } from "@/utils/auth/current-user";
+import ManageAccount from "./manage-account-button";
 
-async function UserButton() {
-  const user = await currentUser();
-
-  if (!user) return null;
+function UserButton() {
+  const user = useCurrentUser();
+  const [openDropdown, setOpenDropdown] = useState(false);
+  if (user === undefined) return notFound();
 
   // utils functions
-  function getInitials(name: string) {
-    return `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`;
-  }
-
-  // TODO: should work -> generate random color ( https://medium.com/@femiakt/generate-avatar-or-profile-picture-with-username-initials-lettered-avatar-with-react-eae5d2de5ac8#4761)
-  function generateBackground(name: string) {
-    let hash = 0;
-    let i;
-
-    for (i = 0; i < name.length; i += 1) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    let color = "#";
-
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-
-    return color;
-  }
 
   // console.log(generateBackground(user?.name!));
 
   return (
-    <DropdownMenu>
+    <DropdownMenu
+      open={openDropdown}
+      onOpenChange={() => {
+        setOpenDropdown(!openDropdown);
+      }}
+    >
       <DropdownMenuTrigger asChild>
         {/* FIXME: Shimmer avatar here */}
-        <Avatar className="relative cursor-pointer">
-          <AvatarImage
-            className="inline-block bg-gray-300"
-            src={user?.image!}
-          />
-          <AvatarFallback>{getInitials(user?.name!)}</AvatarFallback>
-        </Avatar>
+        <div>
+          {user.name && (
+            <UserAvatar userImage={user.image} userName={user.name} />
+          )}
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80 rounded-xl mt-2">
         <DropdownMenuLabel>
           <div className="flex gap-4">
-            <Avatar className="cursor-pointer">
-              <AvatarImage src={user?.image!} />
-              <AvatarFallback
-                className={`bg-[${generateBackground(user?.name!)}]`}
-              >
-                {getInitials(user?.name!)}
-              </AvatarFallback>
-            </Avatar>
+            {user.name && (
+              <UserAvatar userImage={user.image} userName={user.name} />
+            )}
+
             <div className="flex flex-col">
               <p className="font-medium">{user?.name}</p>
               <p className="font-normal text-sm text-gray-800">{user?.email}</p>
@@ -73,16 +57,26 @@ async function UserButton() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem className="py-2 cursor-pointer pl-4 flex gap-8">
-          <p className="">
-            <FcSettings />
-          </p>
-          <p className="">Manage Account</p>
-        </DropdownMenuItem>
+        {/* FIXME: open of Manage account should close dropdown */}
+
+        <ManageAccount className="w-full">
+          <div
+            // onClick={() => {
+            //   setOpenDropdown(!openDropdown);
+            // }}
+            className="py-2 outline-none transition-colors hover:bg-accent rounded-md px-4 items-center cursor-pointer flex gap-8"
+          >
+            <p className="">
+              <FcSettings />
+            </p>
+            <p className="">Manage Account</p>
+          </div>
+        </ManageAccount>
+
         <DropdownMenuSeparator />
 
         <LogoutButton>
-          <DropdownMenuItem className="py-2 cursor-pointer pl-4 flex gap-8">
+          <DropdownMenuItem className="py-2 px-4 cursor-pointer  flex gap-8">
             <p className="">
               <MdLogout />
             </p>

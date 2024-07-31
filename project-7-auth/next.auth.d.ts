@@ -1,5 +1,6 @@
 
 // TODO: TYPE TO BE FIXED
+import { account } from "@prisma/client";
 import { DefaultSession } from "next-auth";
 
 export type ExtendedUser = DefaultSession["user"] & {
@@ -15,6 +16,7 @@ declare module "next-auth" {
     user: {
       id: string;
       role: UserRoles;
+      accounts: account[];
     } & DefaultSession["user"];
   }
 }

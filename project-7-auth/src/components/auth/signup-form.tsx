@@ -1,7 +1,9 @@
 "use client";
 import { signup } from "@/actions/auth-actions";
+import FormError from "@/components/custom ui/form-error";
+import FormSuccess from "@/components/custom ui/form-success";
 import { Button } from "@/components/ui/button";
-import { CardWrapper } from "@/components/ui/card-wrapper";
+import { CardWrapper } from "@/components/custom ui/card-wrapper";
 import {
   Form,
   FormControl,
@@ -10,8 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import FormError from "@/components/ui/form-error";
-import FormSuccess from "@/components/ui/form-success";
 import { Input } from "@/components/ui/input";
 import { signupSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -73,11 +73,7 @@ export const SignUpForm = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="Enter your name"
-                    {...field}
-                  />
+                  <Input type="text" placeholder="Enter your name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

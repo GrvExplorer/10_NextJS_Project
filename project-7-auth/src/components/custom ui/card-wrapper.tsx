@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Social } from "@/components/ui/social";
-import { BackButton } from "./back-button";
+import { BackButton } from "@/components/custom ui/back-button";
 
 interface CardWrapperProps {
   title: string;

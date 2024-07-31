@@ -3,6 +3,8 @@
 import { signIn, signOut } from "@/auth";
 import { db } from "@/db";
 import { loginSchema, signupSchema } from "@/schemas";
+import { getCurrentUser } from "@/utils/db/db.utils";
+import { generateVerificationToken } from "@/utils/db/verification-token.utils";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { z } from "zod";
@@ -10,10 +12,25 @@ import { z } from "zod";
 export const login = async (values: z.infer<typeof loginSchema>) => {
   const validated = loginSchema.safeParse(values);
   if (!validated.success) {
-    return { success: false, message: "Something went wrong" };
+    return { success: false, message: "Enter right email" };
   }
 
   const { email, password } = validated.data;
+
+  const existingUser = await getCurrentUser(email);
+
+  if (!existingUser || !existingUser.password) {
+    return { success: false, message: "Enter right email" };
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateVerificationToken(email);
+
+    return {
+      success: true,
+      message: "Verification email has been sent, please check your email",
+    };
+  }
 
   try {
     await signIn("credentials", {
@@ -24,12 +41,13 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
     });
 
     return { success: true, message: "logged in successfully" };
-
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
           return { success: false, message: "Invalid credentials" };
+        case "AccountNotLinked":
+          return { success: false, message: "Verify your email" };
         default:
           return { success: false, message: "Something went wrong!" };
       }
@@ -80,9 +98,14 @@ export const signup = async (values: z.infer<typeof signupSchema>) => {
       message: "Something went wrong",
     };
 
+  const verificationToken = await generateVerificationToken(createUser.email);
+
   // TODO: Send verification token email;
 
-  return { success: true, message: "signed up successfully" };
+  return {
+    success: true,
+    message: "Verification email has been sent, please check your email",
+  };
 };
 
 export const logout = async () => {
@@ -128,8 +151,8 @@ export const google = async () => {
     if (!res) {
       return { success: false, message: "Something went wrong" };
     }
-    console.log('not able to sign in with google');
-    
+    console.log("not able to sign in with google");
+
     return { success: true, message: "signed up successfully" };
   } catch (error) {
     if (error instanceof AuthError) {

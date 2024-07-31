@@ -4,7 +4,7 @@ import SignedIn from "@/components/auth/signed-in";
 
 import UserButton from "@/components/auth/user-button";
 import { Income } from "@/components/shared/Income";
-  import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { currentUserRole } from "@/utils/auth/current-user";
 
 async function Dashboard() {
@@ -33,15 +33,12 @@ async function Dashboard() {
             👋 Welcome, <span className="font-semibold">{role}</span>
           </p>
 
-      
-            <RoleGate allowedRoles={["ADMIN"]}>
-              <p className="text-center mb-2 font-bold text-white underline">
-
+          <RoleGate allowedRoles={["ADMIN"]}>
+            <p className="text-center mb-2 font-bold text-white underline">
               Charts
-              </p>
-              <Income />
-            </RoleGate>
-        
+            </p>
+            <Income />
+          </RoleGate>
         </div>
       </div>
     </main>
