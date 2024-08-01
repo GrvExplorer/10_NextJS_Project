@@ -1,7 +1,7 @@
 /**
  *
  */
-export const publicRoutes = ["/"];
+export const publicRoutes = ["/", "/verify-user"];
 
 export const authRoutes = ["/sign-in", "/sign-up"];
 

@@ -6,6 +6,7 @@ import github from "next-auth/providers/github";
 import google from "next-auth/providers/google";
 import { db } from "./db";
 import { loginSchema } from "./schemas";
+import { getCurrentUserByEmail } from "./utils/db/db.utils";
 
 export default {
   providers: [
@@ -21,11 +22,7 @@ export default {
         const { email, password } = validated.data;
 
         // TODO: Create Utils for this type of functions
-        const user = await db.user.findFirst({
-          where: {
-            email: email,
-          },
-        });
+        const user = await getCurrentUserByEmail(email);
 
         if (!user || !user.password) throw new CredentialsSignin();
 

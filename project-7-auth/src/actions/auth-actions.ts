@@ -1,12 +1,15 @@
 "use server";
 
 import { signIn, signOut } from "@/auth";
+import sendVerificationTokenEmail from "@/components/auth/verification-token-email";
 import { db } from "@/db";
 import { loginSchema, signupSchema } from "@/schemas";
-import { getCurrentUser } from "@/utils/db/db.utils";
-import { generateVerificationToken } from "@/utils/db/verification-token.utils";
+import { getCurrentUserByEmail } from "@/utils/db/db.utils";
+import { generateVerificationToken, getVerificationTokenByToken } from "@/utils/db/verification-token.utils";
+import { user, verificationToken } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
+import { Resend } from "resend";
 import { z } from "zod";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
@@ -17,7 +20,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
 
   const { email, password } = validated.data;
 
-  const existingUser = await getCurrentUser(email);
+  const existingUser = await getCurrentUserByEmail(email);
 
   if (!existingUser || !existingUser.password) {
     return { success: false, message: "Enter right email" };
@@ -26,6 +29,18 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(email);
 
+    const sendEmail = await sendVerificationEmail(
+      email,
+      existingUser,
+      verificationToken
+    );
+
+    if (!sendEmail.success) {
+      return {
+        success: false,
+        message: "Something went wrong, please try again",
+      };
+    }
     return {
       success: true,
       message: "Verification email has been sent, please check your email",
@@ -71,10 +86,17 @@ export const signup = async (values: z.infer<typeof signupSchema>) => {
   });
 
   if (getUser) {
-    // const match = await login({
-    //   email: validated.data.email,
-    //   password: validated.data.password,
-    // });
+    const match = await login({
+      email: validated.data.email,
+      password: validated.data.password,
+    });
+
+    if (match.success) {
+      return {
+        success: true,
+        message: "Logged in successfully Verify you email",
+      };
+    }
 
     return {
       success: false,
@@ -100,7 +122,25 @@ export const signup = async (values: z.infer<typeof signupSchema>) => {
 
   const verificationToken = await generateVerificationToken(createUser.email);
 
-  // TODO: Send verification token email;
+  if (!verificationToken) {
+    return {
+      success: false,
+      message: "Something went wrong",
+    };
+  }
+
+  const sendedEmail = await sendVerificationEmail(
+    createUser.email,
+    createUser,
+    verificationToken
+  );
+
+  if (!sendedEmail.success) {
+    return {
+      success: false,
+      message: "Something went wrong please try again",
+    };
+  }
 
   return {
     success: true,
@@ -165,4 +205,90 @@ export const google = async () => {
     }
     throw error;
   }
+};
+
+export const sendVerificationEmail = async (
+  email: string,
+  user: user,
+  verification: verificationToken
+) => {
+  const resend = new Resend(process.env.EMAIL_API_KEY);
+
+  const { data, error } = await resend.emails.send({
+    from: "Auth JS <onboarding@resend.dev>",
+    to: ["icodelife307@gmail.com"],
+    subject: "Verify your email",
+    react: sendVerificationTokenEmail({
+      userName: user.name,
+      token: verification.token,
+      userId: user.id,
+      validityDate: verification.expires,
+    }),
+  });
+
+  if (error) {
+    return {
+      success: false,
+    };
+  }
+
+  return {
+    success: true,
+    data: data,
+  };
+};
+
+export const verifyEmail = async (token: string) => {
+  const verification = await getVerificationTokenByToken(token);
+
+  if (!verification) {
+    return {
+      success: false,
+      message: "Invalid token",
+    };
+  }
+
+  const hasExpired = new Date(verification.expires) < new Date()
+
+  if (hasExpired) {
+    return {
+      success: false,
+      message: "Token expired",
+    };
+  }
+
+  const user = await getCurrentUserByEmail(verification.email);
+  if (!user) {
+    return {
+      success: false,
+      message: "User not found",
+    };
+  }
+  if (user.emailVerified) {
+    return {
+      success: false,
+      message: "Email already verified",
+    };
+  }
+  await db.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      emailVerified: new Date(),
+      // doing this for so that can be used to update the email if user already loggedIn and Email will also get's updated during the process of verification.
+      email: user.email,
+    },
+  });
+
+  await db.verificationToken.delete({
+    where: {
+      id: verification.id,
+    },
+  })
+
+  return {
+    success: true,
+    message: "Email verified successfully",
+  };
 };
