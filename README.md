@@ -1,14 +1,15 @@
-# Welcome! To 👋 10 Next JS Projects
-    
-  <p align="left"> <a href="" target="_blank" rel="noreferrer"> <img src="" alt="banner" /></a> </p>
 
-# My Social medial
+# Welcome! To 👋
+    
+  <p align="left"> <a href="https://casecobra-pied.vercel.app/" target="_blank" rel="noreferrer"> <img src="./Project 2 cobra-dev/public/thumbnail.png" alt="banner" /></a> </p>
 
 # Technologies used 
- <p style="display: flex; gap: 10px;">
-
-
- </p>
+- uploadThing
+- prisma
+- razorpay
+- resend
+- next
+- clerk
 
 # My Learning 
  
@@ -18,13 +19,14 @@
 
   ### TODO's
 
+
 ## Acknowledgments
+[josh tried coding](https://youtu.be/SG82Aqcaaa0?si=MH6LA3rEtrguJEPd)
 
 ## Feedback for me 
 
 ## Useful Resources 
 
-## Course 
 
 ## For Developers
     ## The challenge
@@ -36,7 +38,8 @@
 
 **Have fun  Coding 🚀**
 
-# License
 
+# License
 [MIT](https://choosealicense.com/licenses/mit/)
+
 
