@@ -5,14 +5,19 @@ import sendVerificationTokenEmail from "@/components/auth/verification-token-ema
 import { db } from "@/db";
 import { loginSchema, signupSchema } from "@/schemas";
 import { getCurrentUserByEmail } from "@/utils/db/db.utils";
-import { generateVerificationToken, getVerificationTokenByToken } from "@/utils/db/verification-token.utils";
-import { user, verificationToken } from "@prisma/client";
+import { generateVerificationTokenByJWT } from "@/utils/db/verification-token.utils";
+import { user } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { AuthError } from "next-auth";
+import { cookies } from "next/headers";
 import { Resend } from "resend";
 import { z } from "zod";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
+console.log("🚀 ~ file: auth-actions.ts:18 ~ login ~ values:", values)
+
+
   const validated = loginSchema.safeParse(values);
   if (!validated.success) {
     return { success: false, message: "Enter right email" };
@@ -27,13 +32,17 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
   }
 
   if (!existingUser.emailVerified) {
-    const verificationToken = await generateVerificationToken(email);
+    // const verificationToken = await generateVerificationToken(email);
 
-    const sendEmail = await sendVerificationEmail(
+    const verificationToken = await generateVerificationTokenByJWT({
       email,
-      existingUser,
-      verificationToken
-    );
+      password,
+    });
+
+    const sendEmail = await sendVerificationEmail(email, existingUser, {
+      token: verificationToken,
+      expires: "60 min",
+    });
 
     if (!sendEmail.success) {
       return {
@@ -79,22 +88,24 @@ export const signup = async (values: z.infer<typeof signupSchema>) => {
 
   // FIXME: Generate a good salt
 
+  const { email, password, name } = validated.data;
+
   const getUser = await db.user.findFirst({
     where: {
-      email: validated.data.email,
+      email,
     },
   });
 
   if (getUser) {
     const match = await login({
-      email: validated.data.email,
-      password: validated.data.password,
+      email,
+      password,
     });
 
     if (match.success) {
       return {
         success: true,
-        message: "Logged in successfully Verify you email",
+        message: "Verify you email",
       };
     }
 
@@ -104,13 +115,13 @@ export const signup = async (values: z.infer<typeof signupSchema>) => {
     };
   }
 
-  const hashPassword = await bcrypt.hash(validated.data.password, 10);
+  const hashPassword = await bcrypt.hash(password, 10);
 
   // TODO: username adding
   const createUser = await db.user.create({
     data: {
-      name: validated.data.name,
-      email: validated.data.email,
+      name,
+      email,
       password: hashPassword,
     },
   });
@@ -120,7 +131,14 @@ export const signup = async (values: z.infer<typeof signupSchema>) => {
       message: "Something went wrong",
     };
 
-  const verificationToken = await generateVerificationToken(createUser.email);
+  // Database strategy
+  // const verificationToken = await generateVerificationToken(email);
+
+  // jwt strategy
+  const verificationToken = await generateVerificationTokenByJWT({
+    email,
+    password,
+  });
 
   if (!verificationToken) {
     return {
@@ -132,7 +150,10 @@ export const signup = async (values: z.infer<typeof signupSchema>) => {
   const sendedEmail = await sendVerificationEmail(
     createUser.email,
     createUser,
-    verificationToken
+    {
+      token: verificationToken,
+      expires: "60 min",
+    }
   );
 
   if (!sendedEmail.success) {
@@ -210,7 +231,10 @@ export const google = async () => {
 export const sendVerificationEmail = async (
   email: string,
   user: user,
-  verification: verificationToken
+  verification: {
+    token: string;
+    expires: string;
+  }
 ) => {
   const resend = new Resend(process.env.EMAIL_API_KEY);
 
@@ -239,56 +263,99 @@ export const sendVerificationEmail = async (
 };
 
 export const verifyEmail = async (token: string) => {
-  const verification = await getVerificationTokenByToken(token);
+  // const verification = await getVerificationTokenByToken(token);
+  try {
+    const verification: any = jwt.verify(token, process.env.AUTH_SECRET!);
 
-  if (!verification) {
+    if (!verification) {
+      return {
+        success: false,
+        message: "Invalid token",
+      };
+    }
+
+    // const hasExpired = new Date(verification.expires) < new Date();
+
+    // if (hasExpired) {
+    //   return {
+    //     success: false,
+    //     message: "Token expired",
+    //   };
+    // }
+
+    const user = await getCurrentUserByEmail(verification.email);
+    if (!user) {
+      return {
+        success: false,
+        message: "User not found",
+      };
+    }
+    // if (user.emailVerified) {
+    //   return {
+    //     success: false,
+    //     message: "Email already verified",
+    //   };
+    // }
+    const updatedVerification = await db.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        emailVerified: new Date(),
+        // doing this for so that can be used to update the email if user already loggedIn and Email will also get's updated during the process of verification.
+        email: user.email,
+      },
+    });
+
+    // await db.verificationToken.delete({
+    //   where: {
+    //     id: verification.id,
+    //   },
+    // });
+    // const res = await login({
+    //   email: verification.email,
+    //   password: verification.password,
+    // });
+
+    // if (!res.success) {
+    //   return {
+    //     success: false,
+    //     message: 'Error at while login'
+    //   }
+    // }
+
+
+    return {
+      success: true,
+      message: "Email verified successfully",
+      user: {
+        email: verification.email,
+        password: verification.password,
+      }
+    };
+  } catch (error) {
+    if (error instanceof JsonWebTokenError) {
+      switch (error.name) {
+        case "TokenExpiredError":
+          return {
+            success: false,
+            message: "Token expired",
+          };
+
+        default:
+          return {
+            success: false,
+            message: "Invalid token",
+          };
+      }
+    }
+    console.log(error);
+
     return {
       success: false,
       message: "Invalid token",
     };
   }
-
-  const hasExpired = new Date(verification.expires) < new Date()
-
-  if (hasExpired) {
-    return {
-      success: false,
-      message: "Token expired",
-    };
-  }
-
-  const user = await getCurrentUserByEmail(verification.email);
-  if (!user) {
-    return {
-      success: false,
-      message: "User not found",
-    };
-  }
-  if (user.emailVerified) {
-    return {
-      success: false,
-      message: "Email already verified",
-    };
-  }
-  await db.user.update({
-    where: {
-      id: user.id,
-    },
-    data: {
-      emailVerified: new Date(),
-      // doing this for so that can be used to update the email if user already loggedIn and Email will also get's updated during the process of verification.
-      email: user.email,
-    },
-  });
-
-  await db.verificationToken.delete({
-    where: {
-      id: verification.id,
-    },
-  })
-
-  return {
-    success: true,
-    message: "Email verified successfully",
-  };
 };
+
+export const deleteUser = async (id: string) => {};

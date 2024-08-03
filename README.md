@@ -18,13 +18,13 @@
 
   ### TODO's
 
-# Acknowledgments
+## Acknowledgments
 
-# Feedback for me 
+## Feedback for me 
 
-# Useful Resources 
+## Useful Resources 
 
-# Course 
+## Course 
 
 ## For Developers
     ## The challenge
@@ -35,3 +35,8 @@
     ## Need Help from me 
 
 **Have fun  Coding 🚀**
+
+# License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+

@@ -43,11 +43,7 @@ function ManageAccount({
   return (
     <Dialog>
       <DialogTrigger className={cn(className)}>{children}</DialogTrigger>
-      <DialogContent
-        className={cn(
-          "flex p-0 sm:max-w-[600px] min-h-[600px] lg:max-w-[800px]"
-        )}
-      >
+      <DialogContent className={cn("flex p-0 md:max-w-[800px] min-h-[600px]")}>
         <DialogHeader className="space-y-6 w-96 px-4 py-6 lg:h-[600px] bg-[#f7f7f7]">
           <div className="px-4">
             <DialogTitle>Account</DialogTitle>
@@ -80,7 +76,7 @@ function ManageAccount({
                     <p className="text-muted-foreground truncate w-20 md:w-40 lg:w-fit flex items-center gap-4">
                       {/* FIXME: Add user image can be updated by user onclick */}
                       <UserAvatar
-                        userName={user?.name}
+                        userName={user?.name!}
                         userImage={user?.image}
                       />
                       {user?.name}
@@ -96,17 +92,29 @@ function ManageAccount({
                   </div>
                   <DropdownMenuSeparator />
 
-                  <div className="flex justify-between">
-                    <p className="font-medium">Connected Account</p>
-                    <p className="text-muted-foreground">
-                      {/* FIXME: get the logo of provider form api */}
-                      {user &&
-                        user.accounts &&
-                        user.accounts
-                          .map((account) => account.provider)
-                          .join(", ")}
-                    </p>
-                  </div>
+                  {user && user.accounts[0] ? (
+                    <>
+                      <div className="flex justify-between">
+                        <p className="font-medium">Connected Account</p>
+                        <p className="text-muted-foreground">
+                          {/* FIXME: get the logo of provider form api */}
+                          {user.accounts
+                            .map((account) => account.provider)
+                            .join(", ")}
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex justify-between">
+                        <p className="font-medium">Change Password</p>
+                        <p className="text-muted-foreground cursor-pointer">
+                          
+                     
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             } else if ("security" === labelIconActive) {

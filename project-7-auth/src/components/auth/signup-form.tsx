@@ -121,7 +121,8 @@ export const SignUpForm = () => {
                   <Input
                     type="password"
                     placeholder="Confirm your password"
-                    {...field}
+                    value={'23415345jlk'}
+                    // {...field}
                   />
                 </FormControl>
                 <FormMessage />

@@ -25,7 +25,7 @@ function sendVerificationTokenEmail({
   userId: string;
   token: string;
   userName: string | null;
-  validityDate: Date;
+  validityDate: string;
 }) {
   const baseUrl =
     process.env.NODE_ENV === "development"
@@ -35,7 +35,10 @@ function sendVerificationTokenEmail({
   return (
     <Html>
       <Head />
-      <Preview>Your order summary and estimated delivery date</Preview>
+      <Preview>
+        email verification is for better user experience. Good luck with your
+        journey.
+      </Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={message}>
@@ -72,12 +75,11 @@ function sendVerificationTokenEmail({
                 <Text style={global.paragraphWithBold}>user Id</Text>
                 <Text style={track.number}>{userId}</Text>
               </Column>
-              <Column style={{ marginLeft: 20 }}>
+              <Column style={{ marginLeft: 30 }}>
                 <Text style={global.paragraphWithBold}>Token Validity</Text>
                 <Text style={track.number}>
-                  <Text style={{ marginLeft: 10 }}>
-                    {new Date(validityDate).toLocaleDateString()}
-                  </Text>
+                  {/* {new Date(validityDate).toLocaleDateString()} */}
+                  {validityDate}
                 </Text>
               </Column>
             </Row>

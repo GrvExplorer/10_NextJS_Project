@@ -1,18 +1,19 @@
 import { db } from "@/db";
+import jwt from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
 
 export const generateVerificationToken = async (email: string) => {
   const token = uuid();
   const expiryData = new Date(Date.now() + 1000 * 60 * 60 * 24);
 
-  const existingToken = await getVerificationTokenWByEmail(email)
+  const existingToken = await getVerificationTokenWByEmail(email);
 
   if (existingToken) {
     await db.verificationToken.delete({
       where: {
-        id: existingToken.id
-      }
-    })
+        id: existingToken.id,
+      },
+    });
   }
 
   const verificationToken = await db.verificationToken.create({
@@ -44,3 +45,25 @@ export const getVerificationTokenByToken = async (token: string) => {
   });
 };
 
+interface generateProps {
+  email: string;
+  password: string;
+}
+
+export const generateVerificationTokenByJWT = async ({
+  email,
+  password,
+}: generateProps) => {
+  const jwtToken = jwt.sign(
+    {
+      email,
+      password,
+    },
+    process.env.AUTH_SECRET!,
+    {
+      expiresIn: "60m",
+    }
+  );
+
+  return jwtToken;
+};
