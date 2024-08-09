@@ -58,7 +58,10 @@ export const updateUser = async (user: any) => {
 };
 
 // thread
-export const createThread = async (thread: any) => {
+export const createThread = async (thread: {
+  author: string;
+  content: string;
+}) => {
   try {
     await connectToDB();
 
@@ -66,6 +69,8 @@ export const createThread = async (thread: any) => {
       author: thread.author,
       text: thread.content,
     });
+    console.log("🚀 ~ file: user.actions.ts:72 ~ newThread:", newThread)
+
 
     return {
       status: 200,

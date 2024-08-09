@@ -30,7 +30,7 @@ const ThreadSchema = new mongoose.Schema({
   parentId: {
     type: String,
   },
-  replies: [
+  children: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Thread",

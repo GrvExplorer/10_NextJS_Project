@@ -23,13 +23,11 @@ export default async function Page({ params }: { params: { id: string } }) {
       <UserProfileSections />
 
       {/* @ts-ignore */}
-      {thread.map((thread: any) => {
+      {thread.map((thread, i) => {
       {/* @ts-ignore */}
-        return <ThreadCard user={user} thread={thread} />;
+        return <ThreadCard key={i} user={user} thread={thread} />;
       })}
 
-      {/* @ts-ignore  */}
-      {/* <ThreadCard user={user} thread={thread} /> */}
     </div>
   );
 }

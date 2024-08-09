@@ -5,6 +5,7 @@ import "./globals.css";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin"
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
+import { Toaster } from "@/components/ui/toaster";
 
 const recursive = Recursive({
   subsets: ["latin"],
@@ -34,7 +35,9 @@ export default function RootLayout({
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-          {children}</body>
+          {children}
+          <Toaster />
+          </body>
       </html>
     </ClerkProvider>
   );
