@@ -1,5 +1,6 @@
 "use client";
 import { IUser } from "@/db/models/user.model";
+import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -7,10 +8,15 @@ import { Button } from "../ui/button";
 import { DropdownMenuSeparator } from "../ui/dropdown-menu";
 
 function UserProfile({ user }: { user: IUser | undefined }) {
+  const session = useUser();
+  if (!user) return null;
+
+  const edit = session?.user?.id === user?.id || false;
+
   return (
     <div>
-      <div className="flex justify-between w-full">
-        <div className="flex gap-6">
+      <div className="flex justify-between items-center w-full">
+        <div className="flex items-center gap-6">
           <Avatar className="w-20 h-20">
             <AvatarImage src={user?.image} />
             <AvatarFallback>
@@ -29,23 +35,24 @@ function UserProfile({ user }: { user: IUser | undefined }) {
             <p className="text-base-regular text-light-3">@{user?.username}</p>
           </div>
         </div>
-
-        <Link href="/profile/edit">
-          <Button className="flex items-center gap-2">
-            <Image
-              src={"/assets/edit.svg"}
-              alt="edit_icon"
-              width={16}
-              height={16}
-            />
-            Edit
-          </Button>
-        </Link>
+        {edit && (
+          <Link href="/profile/edit">
+            <Button className="flex items-center gap-2">
+              <Image
+                src={"/assets/edit.svg"}
+                alt="edit_icon"
+                width={16}
+                height={16}
+              />
+              Edit
+            </Button>
+          </Link>
+        )}
       </div>
 
       <p className="mt-6 text-base-regular text-light-2">{user?.bio}</p>
 
-      <DropdownMenuSeparator className="w-full mt-6" />
+      <DropdownMenuSeparator className="w-full bg-dark-4 mt-10" />
     </div>
   );
 }

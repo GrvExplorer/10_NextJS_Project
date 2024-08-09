@@ -1,14 +1,16 @@
 "use server";
 
 import { connectToDB } from "@/db";
+import Thread from "@/db/models/thread.model";
 import User from "@/db/models/user.model";
-import mongoose, { MongooseError } from "mongoose";
+import mongoose from "mongoose";
 
+// user
 export const updateUser = async (user: any) => {
   try {
     await connectToDB();
 
-    // FIXME: not give the permission to use existing username and provide them feedback for it. 
+    // FIXME: not give the permission to use existing username and provide them feedback for it.
     const updateUser = await User.findOneAndReplace(
       { id: user.userId },
       {
@@ -54,3 +56,49 @@ export const updateUser = async (user: any) => {
     throw error;
   }
 };
+
+// thread
+export const createThread = async (thread: any) => {
+  try {
+    await connectToDB();
+
+    const newThread = await Thread.create({
+      author: thread.author,
+      text: thread.content,
+    });
+
+    return {
+      status: 200,
+      success: true,
+      thread: JSON.stringify(newThread),
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      success: false,
+      error: error.message,
+    };
+  }
+};
+
+export async function deleteThread(id: string) {
+  try {
+    await connectToDB();
+
+    await Thread.deleteOne({ id: id });
+
+    return {
+      status: 200,
+      success: true,
+      message: "Thread deleted",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      success: false,
+      error: error.message,
+    };
+  }
+}

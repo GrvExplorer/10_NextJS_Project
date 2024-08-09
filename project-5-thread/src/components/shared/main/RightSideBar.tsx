@@ -1,8 +1,20 @@
-import { currentUser } from "@clerk/nextjs";
+import UserProfileCard from "@/components/custom ui/user-profile-card";
+import { fetchUsers } from "@/db/data";
 
 async function RightSidebar() {
-  // const user = await currentUser();
-  // if (!user) return null;
+  let similarMinds = await fetchUsers({
+    count: 4,
+  });
+
+  if (!similarMinds || similarMinds.length === 0) {
+    return (
+      <div className="mt-7 flex w-[350px] flex-col gap-10">
+        <p className="!text-base-regular text-light-3">No users yet</p>
+      </div>
+    );
+  }
+
+  similarMinds = JSON.parse(similarMinds);
 
   return (
     <section className="custom-scrollbar rightsidebar">
@@ -18,8 +30,14 @@ async function RightSidebar() {
 
       <div className="flex flex-1 flex-col justify-start">
         <h3 className="text-heading4-medium text-light-1">Similar Minds</h3>
+
         <div className="mt-7 flex w-[350px] flex-col gap-10">
-          <p className="!text-base-regular text-light-3">No users yet</p>
+          {/* @ts-ignore */}
+          {similarMinds?.length > 0 ? (
+            <UserProfileCard user={similarMinds[0]} />
+          ) : (
+            <p className="!text-base-regular text-light-3">No users yet</p>
+          )}
         </div>
       </div>
     </section>
