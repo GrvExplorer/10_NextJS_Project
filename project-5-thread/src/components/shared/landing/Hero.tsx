@@ -1,6 +1,10 @@
+"use client";
 import { GridBackground } from "@/components/ui/GridBackground";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const router = useRouter();
+
   return (
     <main className="">
       <GridBackground>
@@ -16,7 +20,10 @@ export default function Hero() {
             platform.
           </h2>
 
-          <button className="relative inline-flex h-16 w-[160px] overflow-hidden rounded-full p-[1px] focus:outline-none ">
+          <button
+            onClick={() => router.push("/feed")}
+            className="relative inline-flex h-16 w-[160px] overflow-hidden rounded-full p-[1px] focus:outline-none "
+          >
             <span className="absolute inset-[-100%] animate-[spin_2s_linear_infinite] btn-cta" />
             <div className="flex justify-center items-center w-full h-full">
               <span className="inline-flex h-[54px] w-[150px] cursor-pointer items-center justify-center rounded-full px-3 py-1 text-sm font-medium text-primary-content backdrop-blur-3xl">

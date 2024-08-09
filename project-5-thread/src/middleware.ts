@@ -1,17 +1,24 @@
-// import NextAuth from "next-auth";
-// import { authConfig } from "./auth.config";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// export default NextAuth(authConfig).auth;
+const isPublicRoute = createRouteMatcher([
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/",
+  "/legal(.*)",
+  "/api/uploadthing(.*)",
+]);
 
-// // Read more: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-// export const config = {
-//   matcher: ["/feed:path*"],
-// };
+export default clerkMiddleware(async (auth, req) => {
+  if (!isPublicRoute(req)) {
+    // FIXME: if user try's to go to other routes without onboarding then redirect them to onboarding page.
 
-import { clerkMiddleware } from "@clerk/nextjs/server";
-
-export default clerkMiddleware();
+    auth().protect();
+  }
+});
 
 export const config = {
-  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
+  ],
 };

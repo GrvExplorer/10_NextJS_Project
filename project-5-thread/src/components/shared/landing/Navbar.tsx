@@ -25,7 +25,7 @@ export default function Navbar() {
           </div>
         </Link>
 
-        <ul className="flex gap-8 justify-center pl-4">
+        <ul className="lg:gap-4 justify-center pl-4 hidden md:flex">
           <li className="btn-base-ghost">Enterprise</li>
           <li className="btn-base-ghost">Pricing</li>
           <li className="btn-base-ghost">Docs</li>
@@ -33,6 +33,7 @@ export default function Navbar() {
         </ul>
 
         <div className="flex flex-row-reverse gap-4">
+          {/* FIXME: suspense   */}
           <SignedOut>
             <SignInButton>
               <button

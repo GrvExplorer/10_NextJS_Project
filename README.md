@@ -1,7 +1,7 @@
 
-# Welcome! To 👋
+# Welcome!
     
-  <p align="left"> <a href="https://casecobra-pied.vercel.app/" target="_blank" rel="noreferrer"> <img src="./Project 2 cobra-dev/public/thumbnail.png" alt="banner" /></a> </p>
+
 
 # Technologies used 
 - uploadThing
