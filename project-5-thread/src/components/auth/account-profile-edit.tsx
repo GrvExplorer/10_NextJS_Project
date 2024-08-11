@@ -91,10 +91,6 @@ function AccountProfile({ user, btnTitle }: { user: any; btnTitle: string }) {
       return;
     }
 
-    if (newUser.status === 200 && newUser.user) {
-      console.log(newUser);   
-    }
-
     router.push("/feed");
   }
 

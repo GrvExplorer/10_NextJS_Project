@@ -8,7 +8,20 @@ export const updateUser = async (user: any) => {
   try {
     await connectToDB();
 
-    // FIXME: not give the permission to use existing username and provide them feedback for it. 
+
+
+    const usernameAvailable = await User.findOne({
+      username: user.username.toLowerCase().replace(/ /g, ""),
+    });
+
+    if (usernameAvailable) {
+      return {
+        status: 409,
+        success: false,
+        message: "Username already exists",
+      };
+    }
+
     const updateUser = await User.findOneAndReplace(
       { id: user.userId },
       {
@@ -24,6 +37,7 @@ export const updateUser = async (user: any) => {
       }
     );
 
+
     return {
       status: 200,
       success: true,
@@ -33,22 +47,22 @@ export const updateUser = async (user: any) => {
     // console.error(error);
     // console.log(error);
     if (error instanceof mongoose.Error) {
-      switch (error.cause) {
-        case "E11000":
-          return {
-            status: 409,
-            success: false,
-            error: error.cause,
-            message: "Username already exists",
-          };
-        default:
-          console.log("default: ", error);
-          return {
-            status: 500,
-            success: false,
-            error: error.cause,
-          };
-      }
+      // switch (error.cause) {
+      //   case "E11000":
+      //     return {
+      //       status: 409,
+      //       success: false,
+      //       error: error.cause,
+      //       message: "Username already exists",
+      //     };
+      //   default:
+      //     console.log("default: ", error);
+      //     return {
+      //       status: 500,
+      //       success: false,
+      //       error: error.cause,
+      //     };
+      // }
     }
 
     throw error;

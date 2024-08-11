@@ -9,8 +9,8 @@ import { DropdownMenuSeparator } from "../ui/dropdown-menu";
 function UserProfile({ user }: { user: IUser | undefined }) {
   return (
     <div>
-      <div className="flex justify-between w-full">
-        <div className="flex gap-6">
+      <div className="flex justify-between w-full items-center">
+        <div className="flex gap-6 items-center">
           <Avatar className="w-20 h-20">
             <AvatarImage src={user?.image} />
             <AvatarFallback>

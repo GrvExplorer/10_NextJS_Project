@@ -8,6 +8,8 @@ export const fetchUserById = async (userId: string) => {
     await connectToDB();
 
     const user = await User.findOne({ id: userId });
+    console.log("🚀 ~ file: data.ts:11 ~ fetchUserById ~ user:", user)
+
 
     if (!user) {
       throw new Error(`Failed to fetch user`);

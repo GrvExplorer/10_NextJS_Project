@@ -1,4 +1,4 @@
-import AccountProfile from "@/components/auth/account-profile";
+import AccountProfile from "@/components/auth/account-profile-edit";
 import { fetchUserById } from "@/db/data";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -7,9 +7,13 @@ async function Page() {
   const user = await currentUser();
   if (!user) return null;
 
-  const userInfo = await fetchUserById(user.id);
+  let userInfo = await fetchUserById(user.id);
+  if (userInfo) {
+    userInfo = JSON.parse(userInfo);
+  }
+    
 
-  if (userInfo?.onboarded) redirect("/feed");
+  // if (userInfo?.onboarded) redirect("/feed");
 
   const userData = {
     id: user.id,

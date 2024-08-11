@@ -1,4 +1,4 @@
-import AccountProfile from "@/components/auth/account-profile";
+import AccountProfile from "@/components/auth/account-profile-edit";
 import { fetchUserById } from "@/db/data";
 import { currentUser } from "@clerk/nextjs/server";
 
