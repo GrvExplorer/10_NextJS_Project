@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { DropdownMenuSeparator } from "../ui/dropdown-menu";
+import ProfilePhoto from "../ui/profile-photo";
 
 function UserProfile({ user }: { user: IUser | undefined }) {
   const session = useUser();
@@ -17,18 +18,7 @@ function UserProfile({ user }: { user: IUser | undefined }) {
     <div>
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center gap-6">
-          <Avatar className="w-20 h-20">
-            <AvatarImage src={user?.image} />
-            <AvatarFallback>
-              <Image
-                src="/assets/profile.svg"
-                alt="profile_icon"
-                width={24}
-                height={24}
-                className="object-contain"
-              />
-            </AvatarFallback>
-          </Avatar>
+          <ProfilePhoto userImage={user?.image} />
 
           <div className="">
             <h1 className="text-heading4-medium text-light-1">{user?.name}</h1>

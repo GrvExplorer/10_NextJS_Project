@@ -1,26 +1,50 @@
 "use client";
-import { deleteThread } from "@/actions/user.actions";
+import { deleteThread } from "@/actions/thread.actions";
+import { fetchAuthorById  } from "@/db/data";
 import { IThread } from "@/db/models/thread.model";
-import { IUser } from "@/db/models/user.model";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card } from "../ui/card";
+import { useToast } from "../ui/use-toast";
 
-function ThreadCard({
-  thread,
-  user,
-}: {
-  thread: IThread;
-  user: IUser | undefined;
-}) {
+function ThreadCard({ thread }: { thread: IThread }) {
   // FIXME: add delete functionality
+  const [user, setUser] = useState();
 
+  const path = usePathname();
   const session = useUser();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const userByThread = async () => {
+      const res = await fetchAuthorById(thread.author);
+      if (res) {
+        setUser(JSON.parse(res));
+      }
+    };
+
+    userByThread();
+  }, [thread.author]);
 
   async function handelDelete(id: string) {
-    await deleteThread(id);
+    const res = await deleteThread(id, path);
+
+    if (res.status === 200 || res.success) {
+      toast({
+        title: "Success",
+        description: res.message,
+      });
+    }
+
+    toast({
+      title: "Error",
+      description: res.error,
+      variant: "destructive",
+    });
   }
 
   if (!session) return null;
@@ -54,7 +78,7 @@ function ThreadCard({
             </div>
             <div className="space-x-2 flex">
               <div className="">
-                <Link href={`/thread/${thread.id}`}>
+                <Link href={`/thread/${thread._id}`}>
                   <Image
                     src={"/assets/heart-gray.svg"}
                     alt="heart_icon"
@@ -64,7 +88,7 @@ function ThreadCard({
                 </Link>
               </div>
               <div className="">
-                <Link href={`/thread/${thread.id}`}>
+                <Link href={`/thread/${thread._id}`}>
                   <Image
                     src={"/assets/reply.svg"}
                     alt="reply_icon"
@@ -74,7 +98,7 @@ function ThreadCard({
                 </Link>
               </div>
               <div className="">
-                <Link href={`/thread/${thread.id}`}>
+                <Link href={`/thread/${thread._id}`}>
                   <Image
                     src={"/assets/share.svg"}
                     alt="share_icon"
@@ -84,7 +108,7 @@ function ThreadCard({
                 </Link>
               </div>
               <div className="">
-                <Link href={`/thread/${thread.id}`}>
+                <Link href={`/thread/${thread._id}`}>
                   <Image
                     src={"/assets/tag.svg"}
                     alt="tag_icon"
@@ -97,15 +121,17 @@ function ThreadCard({
           </div>
         </div>
 
-        {isAuthor && (
-          <Image
-            onClick={() => handelDelete(thread.id)}
-            src={"/assets/delete.svg"}
-            alt="reply_icon"
-            width={24}
-            height={24}
-          />
-        )}
+        <div className="cursor-pointer">
+          {isAuthor && (
+            <Image
+              onClick={() => handelDelete(thread._id)}
+              src={"/assets/delete.svg"}
+              alt="reply_icon"
+              width={24}
+              height={24}
+            />
+          )}
+        </div>
       </div>
 
       <div className="flex justify-between items-center">

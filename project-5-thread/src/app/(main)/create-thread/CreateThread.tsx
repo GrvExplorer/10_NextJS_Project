@@ -1,5 +1,5 @@
 "use client";
-import { createThread } from "@/actions/user.actions";
+import { createThread } from "@/actions/thread.actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,

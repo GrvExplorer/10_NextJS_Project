@@ -33,8 +33,9 @@ async function RightSidebar() {
 
         <div className="mt-7 flex w-[350px] flex-col gap-10">
           {/* @ts-ignore */}
-          {similarMinds?.length > 0 ? (
-            <UserProfileCard user={similarMinds[0]} />
+
+          {similarMinds?.length > 0 && similarMinds ? (
+            similarMinds.map((mind) => <UserProfileCard key={mind.id} user={mind} />)   
           ) : (
             <p className="!text-base-regular text-light-3">No users yet</p>
           )}

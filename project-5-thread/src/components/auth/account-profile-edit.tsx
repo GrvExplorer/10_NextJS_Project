@@ -1,6 +1,6 @@
 "use client";
 
-import { updateUser } from "@/actions/user.actions";
+import { onBoardUser, updateUser } from "@/actions/user.actions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -23,7 +23,7 @@ import { z } from "zod";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Textarea } from "../ui/textarea";
 
-function AccountProfile({ user, btnTitle }: { user: any; btnTitle: string }) {
+function AccountProfileEdit({ user, btnTitle }: { user: any; btnTitle: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const [files, setFiles] = useState<File[]>([]);
@@ -89,10 +89,6 @@ function AccountProfile({ user, btnTitle }: { user: any; btnTitle: string }) {
     if (newUser?.status === 409) {
       form.setError("username", { message: "Username already taken" });
       return;
-    }
-
-    if (newUser.status === 200 && newUser.user) {
-      console.log(newUser);   
     }
 
     router.push("/feed");
@@ -192,4 +188,4 @@ function AccountProfile({ user, btnTitle }: { user: any; btnTitle: string }) {
   );
 }
 
-export default AccountProfile;
+export default AccountProfileEdit;

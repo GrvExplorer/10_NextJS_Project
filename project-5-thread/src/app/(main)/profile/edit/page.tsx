@@ -1,4 +1,4 @@
-import AccountProfile from "@/components/auth/account-profile";
+import AccountProfileEdit from "@/components/auth/account-profile-edit";
 import { fetchUserById } from "@/db/data";
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -23,7 +23,7 @@ export default async function Page() {
 
   return (
     <div>
-      <AccountProfile user={userData} btnTitle="Update" />
+      <AccountProfileEdit user={userData} btnTitle="Update" />
     </div>
   );
 }

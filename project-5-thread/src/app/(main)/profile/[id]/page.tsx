@@ -10,8 +10,10 @@ export default async function Page({ params }: { params: { id: string } }) {
   let user = await fetchUserById(userId);
   if (!user) return <></>;
   user = JSON.parse(user);
+  console.log("🚀 ~ file: page.tsx:13 ~ Page ~ user:", user?._id)
 
-  let thread = await fetchAllThreadsOfUser("66b4c27595050d965a8d455a");
+
+  let thread = await fetchAllThreadsOfUser(user?._id);
   if (!thread) return <></>;
   thread = JSON.parse(thread);
 
@@ -25,7 +27,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       {/* @ts-ignore */}
       {thread.map((thread, i) => {
       {/* @ts-ignore */}
-        return <ThreadCard key={i} user={user} thread={thread} />;
+        return <ThreadCard key={i} thread={thread} />;
       })}
 
     </div>
