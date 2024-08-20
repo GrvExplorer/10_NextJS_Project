@@ -154,6 +154,8 @@ export const fetchAllThreadsOfUser = async (userId: string) => {
 
 export const fetchThreadReplies = async (threadId: string) => {
   try {
+
+    await connectToDB()
  
     const replies = await Thread.find({ parentId: threadId }).exec();
     

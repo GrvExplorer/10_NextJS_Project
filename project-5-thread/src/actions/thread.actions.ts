@@ -1,5 +1,7 @@
 import { connectToDB } from "@/db";
+// @ts-ignore
 import Thread from "@/db/models/thread.model";
+import User from "@/db/models/user.model";
 import { revalidatePath } from "next/cache";
 
 // thread
@@ -10,6 +12,7 @@ export const createThread = async (thread: {
   try {
     await connectToDB();
 
+// @ts-ignore
     const newThread = await Thread.create({
       author: thread.author,
       text: thread.content,
@@ -65,11 +68,17 @@ export async function replyToThread({authorId, text, parentId}:{
 }) {
   try {
     
+    await connectToDB()
+
     const replyThread = await Thread.create({
       author: authorId,
       text,
       parentId,
+    }, {
+      upsert: true,
     })
+    console.log("🚀 ~ file: thread.actions.ts:73 ~ replyThread:", replyThread)
+
 
     revalidatePath(`/thread/${parentId}`, "page");
 

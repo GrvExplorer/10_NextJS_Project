@@ -1,13 +1,13 @@
 import mongoose, { Document } from "mongoose";
 
-export interface IThread extends Document {
-  text: string;
-  author: string;
-  community: string;
-  createdAt: Date;
-  parentId: string;
-  replies: string[];
-}
+// export interface IThread extends Document {
+//   text: string;
+//   author: string;
+//   community: string;
+//   createdAt: Date;
+//   parentId: string;
+//   replies: string[];
+// }
 
 const ThreadSchema = new mongoose.Schema({
   text: {
@@ -38,17 +38,16 @@ const ThreadSchema = new mongoose.Schema({
   ],
 });
 
+console.log("Mongoose Models:", mongoose.models);
 
-console.log('Mongoose Models:', mongoose.models);
+let Thread;
+if (!mongoose.models) {
+  Thread = mongoose.model("Thread", ThreadSchema);
+} else {
+  Thread = mongoose.models.Thread;
+}
 
-// let Thread
-// if (!mongoose.models) {
-//   mongoose.model("Thread", ThreadSchema); 
-// } else {
-//   Thread = mongoose.models.Thread
-// }
-
-
-const Thread = mongoose.models.Thread || mongoose.model<IThread>("Thread", ThreadSchema) 
+// FIXME: error model undefined I am stuck here.
+// const Thread = mongoose.models.Thread || mongoose.model("Thread", ThreadSchema)
 
 export default Thread;

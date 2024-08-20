@@ -53,7 +53,7 @@ function CreateThread() {
     if (!createdThread.success) {
       toast({
         title: "Error",
-        description: "Not able to post the thread",
+        description: `Not able to post the thread ${createdThread.error}`,
         variant: "destructive",
       });
       return null;

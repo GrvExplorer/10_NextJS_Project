@@ -2,6 +2,7 @@
 
 import { connectToDB } from "@/db";
 import User from "@/db/models/user.model";
+import Thread from "@/db/models/thread.model";
 import mongoose from "mongoose";
 
 // user

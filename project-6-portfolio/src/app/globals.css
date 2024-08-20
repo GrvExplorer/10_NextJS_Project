@@ -68,14 +68,24 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border !scroll-smooth;
   }
   body {
     @apply bg-background text-foreground;
   }
+  button {
+    @apply active:outline-none;
+  }
 }
 
-@layer {
+@layer utilities {
+  .heading {
+    @apply font-bold text-4xl md:text-5xl text-center;
+  }
+
+  .black-gradient {
+    background: linear-gradient(90deg, #161a31 0%, #06091f 100%);
+  }
   .flex-center {
     @apply flex items-center justify-center;
   }

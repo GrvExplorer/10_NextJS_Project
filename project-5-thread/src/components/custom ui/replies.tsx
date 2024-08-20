@@ -1,4 +1,3 @@
-import { IThread } from '@/db/models/thread.model'
 import React from 'react'
 
 function ShowReplies({

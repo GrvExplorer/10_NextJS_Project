@@ -10,15 +10,16 @@ import { useToast } from "../ui/use-toast";
 function RepliesToThread({
   parentId,
   authorId,
+  userImage,
 }: {
   parentId: string;
   authorId: string;
+  userImage: string;
 }) {
   const [reply, setReply] = useState("");
   const { toast } = useToast();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    "use server";
     e.preventDefault();
 
     const replyRes = await replyToThread({ authorId, text: reply, parentId });
@@ -28,6 +29,7 @@ function RepliesToThread({
       setReply("");
     }
 
+    console.log(replyRes);
     toast({
       title: "Error",
       description: replyRes.error,
@@ -39,7 +41,7 @@ function RepliesToThread({
     <div className="space-y-4">
       <DropdownMenuSeparator className="bg-dark-4" />
       <form onSubmit={onSubmit} className="text-light-1 flex gap-4 ">
-        <ProfilePhoto userImage={userInfo.image} className="w-10 h-10" />
+        <ProfilePhoto userImage={userImage} className="w-10 h-10" />
         <Input type="text" onChange={(e) => setReply(e.target.value)} />
         <Button className="bg-primary-500" type="submit">
           Reply
