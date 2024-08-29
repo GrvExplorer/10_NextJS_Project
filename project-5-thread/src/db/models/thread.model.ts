@@ -1,15 +1,6 @@
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 
-// export interface IThread extends Document {
-//   text: string;
-//   author: string;
-//   community: string;
-//   createdAt: Date;
-//   parentId: string;
-//   replies: string[];
-// }
-
-const ThreadSchema = new mongoose.Schema({
+export const ThreadSchema = new mongoose.Schema({
   text: {
     type: String,
     required: true,
@@ -19,35 +10,23 @@ const ThreadSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  community: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Community",
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  parentId: {
-    type: String,
-  },
-  children: [
+  "sub-threads": [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Thread",
     },
   ],
+  parentId: {
+    type: String,
+  },
+  community: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Community",
+  },
+}, {
+  timestamps: true,
 });
 
-console.log("Mongoose Models:", mongoose.models);
+export type ThreadDocument = mongoose.InferSchemaType<typeof ThreadSchema>;
 
-let Thread;
-if (!mongoose.models) {
-  Thread = mongoose.model("Thread", ThreadSchema);
-} else {
-  Thread = mongoose.models.Thread;
-}
-
-// FIXME: error model undefined I am stuck here.
-// const Thread = mongoose.models.Thread || mongoose.model("Thread", ThreadSchema)
-
-export default Thread;
+export const Thread = mongoose.models?.Thread || mongoose.model("Thread", ThreadSchema);

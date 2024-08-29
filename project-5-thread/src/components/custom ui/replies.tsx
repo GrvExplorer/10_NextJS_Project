@@ -1,15 +1,17 @@
-import React from 'react'
+import ThreadCard from "./thread-card";
 
-function ShowReplies({
-  replies
-}: {
-  replies: IThread | undefined
-}) {
+function ShowReplies({ replies }) {
   console.log(replies);
-  
+
   return (
-    <div>ShowReplies</div>
-  )
+    <>
+      {replies.map((reply, i) => (
+        <div key={i} className="space-y-4">
+          <ThreadCard thread={reply} />
+        </div>
+      ))}
+    </>
+  );
 }
 
-export default ShowReplies
+export default ShowReplies;

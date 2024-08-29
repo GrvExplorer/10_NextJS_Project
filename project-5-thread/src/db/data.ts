@@ -1,8 +1,8 @@
 "use server";
 
 import { connectToDB } from "@/db";
-import Thread from "./models/thread.model";
 import User from "./models/user.model";
+import { Thread } from "./models/thread.model";
 
 // user
 export const fetchUserById = async (userId: string) => {
@@ -15,7 +15,7 @@ export const fetchUserById = async (userId: string) => {
       throw new Error(`Failed to fetch user`);
     }
 
-    return JSON.stringify(user);
+    return await JSON.parse(JSON.stringify(user));
   } catch (error: any) {
     console.error(error);
   }
@@ -103,7 +103,7 @@ export const fetchThreadById = async (threadId: string) => {
   try {
     await connectToDB();
 
-    const thread = await Thread.findOne({ id: threadId }).exec();
+    const thread = await Thread.findOne({ _id: threadId }).exec();
 
     if (!thread) {
       throw new Error(`Failed to fetch thread`);
@@ -121,10 +121,10 @@ export const fetchAllThreads = async () => {
     // FIXME: indexing and pagination
     let threads = await Thread.find({}).exec();
 
-    threads = threads.map((thread) => {
-      if (thread.parentId) return;
-      return thread;
-    });
+    // threads = threads.map((thread) => {
+    //   if (thread.parentId) return;
+    //   return thread;
+    // });
 
     if (!threads) {
       throw new Error(`Failed to fetch threads`);

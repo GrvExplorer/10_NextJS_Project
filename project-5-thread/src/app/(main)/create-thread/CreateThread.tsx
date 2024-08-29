@@ -10,16 +10,13 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { fetchUserById } from "@/db/data";
 import { ThreadValidation } from "@/validation/form.validation";
-import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-function CreateThread() {
-  const { user } = useUser();
+function CreateThread({ authorId }: { authorId: string }) {
   const { toast } = useToast();
   const router = useRouter();
 
@@ -27,36 +24,24 @@ function CreateThread() {
     resolver: zodResolver(ThreadValidation),
     defaultValues: {
       thread: "",
+      author: authorId,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
-    console.log(values);
-
-    let userDB = await fetchUserById(user.id);
-    userDB = JSON.parse(userDB);
-
-    if (!userDB || !userDB._id) {
-      toast({
-        title: "Error",
-        description: "Not able to post the thread due to no found _id in user",
-        variant: "destructive",
-      });
-      return null;
-    }
-
+    // thread creation login
     const createdThread = await createThread({
-      author: userDB?._id,
-      content: values.thread,
+      thread: values.thread,
+      author: values.author,
     });
 
-    if (!createdThread.success) {
+    if (createdThread.success === false) {
       toast({
         title: "Error",
-        description: `Not able to post the thread ${createdThread.error}`,
+        description: createdThread.error,
         variant: "destructive",
       });
-      return null;
+      return;
     }
 
     toast({
@@ -65,9 +50,7 @@ function CreateThread() {
     });
     form.reset({});
 
-    router.push('/feed')
-
-    return createThread;
+    // router.push('/feed')
   };
 
   return (

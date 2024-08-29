@@ -60,7 +60,7 @@ async function Hero() {
         </h2>
         <h1>
           <TextGenerateEffect
-            className="text-[40px] md:text-5xl lg:text-6xl"
+            className="text-[40px] md:text-5xl lg:text-6xl "
             words={headingsOfLandingPage.h1}
           />
           <p className="mb-4 text-sm md:text-lg md:tracking-wider lg:text-2xl">

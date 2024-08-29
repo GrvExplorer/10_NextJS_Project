@@ -12,10 +12,11 @@ export default async function Page() {
       <div className="mt-8">
         {/* @ts-ignore */}
         {threads.map((thread, i) => {
-          {
-            /* @ts-ignore */
-          }
-          return <ThreadCard key={i} thread={thread} />;
+          return (
+            <div key={i} className="space-y-8">
+              <ThreadCard thread={thread} />;
+            </div>
+          );
         })}
       </div>
     </div>

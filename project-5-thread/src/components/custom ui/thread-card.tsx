@@ -1,7 +1,5 @@
 "use client";
-import { deleteThread } from "@/actions/thread.actions";
 import { fetchAuthorById  } from "@/db/data";
-import { IThread } from "@/db/models/thread.model";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,10 +8,13 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card } from "../ui/card";
 import { useToast } from "../ui/use-toast";
+import { deleteThread } from "@/actions/thread.actions";
 
-function ThreadCard({ thread }: { thread: IThread }) {
+function ThreadCard({ thread }) {
   // FIXME: add delete functionality
   const [user, setUser] = useState();
+console.log(thread);
+
 
   const path = usePathname();
   const session = useUser();
@@ -38,8 +39,8 @@ function ThreadCard({ thread }: { thread: IThread }) {
         title: "Success",
         description: res.message,
       });
+      return
     }
-
     toast({
       title: "Error",
       description: res.error,
