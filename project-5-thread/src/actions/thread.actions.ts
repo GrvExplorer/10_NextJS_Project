@@ -13,7 +13,6 @@ export const createThread = async ({
 }) => {
   try {
     await connectToDB();
-    console.log(thread, author);
     
     const createThread = await Thread.create({
       text: thread,
@@ -64,6 +63,7 @@ export async function deleteThread(id: string, path: string) {
     return {
       status: 500,
       success: false,
+      
       error: error.message,
     };
   }

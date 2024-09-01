@@ -43,6 +43,8 @@ const userSchema = new mongoose.Schema({
       ref: "Community",
     },
   ],
+}, {
+  timestamps: true,
 });
 
 const User = mongoose.models?.User || mongoose.model<IUser>("User", userSchema);

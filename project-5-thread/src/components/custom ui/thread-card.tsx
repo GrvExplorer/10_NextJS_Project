@@ -53,7 +53,7 @@ console.log(thread);
   const isAuthor = session?.user?.id === user?.id;
 
   return (
-    <Card className="bg-dark-3 py-4 px-8">
+    <Card className="bg-dark-3 py-4 px-8 ">
       <div className="w-full flex justify-between items-start">
         <div className="flex gap-4">
           <div className="flex flex-col">

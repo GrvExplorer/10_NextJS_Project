@@ -1,11 +1,11 @@
 "use client";
+import { replyToThread } from "@/actions/thread.actions";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { DropdownMenuSeparator } from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
 import ProfilePhoto from "../ui/profile-photo";
 import { useToast } from "../ui/use-toast";
-import { replyToThread } from "@/actions/thread.actions";
 
 function RepliesToThread({
   parentId,
@@ -41,12 +41,21 @@ function RepliesToThread({
   return (
     <div className="space-y-4">
       <DropdownMenuSeparator className="bg-dark-4" />
-      <form onSubmit={onSubmit} className="text-light-1 flex gap-4 ">
-        <ProfilePhoto userImage={userImage} className="w-10 h-10" />
-        <Input type="text" value={reply} onChange={(e) => setReply(e.target.value)} />
-        <Button className="bg-primary-500" type="submit">
-          Reply
-        </Button>
+      <form onSubmit={onSubmit} className="flex flex-col md:flex-row gap-4 w-full">
+        <div className="text-light-1 flex gap-4 w-full">
+          <ProfilePhoto userImage={userImage} className="w-10 h-10" />
+          <Input
+            type="text"
+            className=""
+            value={reply}
+            onChange={(e) => setReply(e.target.value)}
+          />
+        </div>
+        <div className="">
+          <Button className="bg-primary-500 w-full md:w-fit" type="submit">
+            Reply
+          </Button>
+        </div>
       </form>
       <DropdownMenuSeparator className="bg-dark-4 " />
     </div>
