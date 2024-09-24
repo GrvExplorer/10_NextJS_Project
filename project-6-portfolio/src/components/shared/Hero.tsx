@@ -4,31 +4,34 @@ import { FloatingNav } from "@/components/ui/floating-navbar";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { headingsOfLandingPage } from "@/constants";
 import { IconHome, IconMessage, IconUser } from "@tabler/icons-react";
-import React from "react";
 import { FaLocationArrow } from "react-icons/fa";
 
 const navItems = [
   {
     name: "Home",
-    link: "/",
+    link: "",
     icon: <IconHome className="h-4 w-4 text-neutral-500 dark:text-white" />,
   },
   {
     name: "About",
-    link: "/about",
+    link: "about",
+    icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
+  },
+  {
+    name: "Project",
+    link: "project",
     icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
   },
   {
     name: "Contact",
-    link: "/contact",
+    link: "contact",
     icon: <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />,
   },
 ];
 
 async function Hero() {
-
   return (
-    <div className="pb-20 pt-36">
+    <section className="pb-20 pt-36" id="">
       <div className="relative w-full">
         <FloatingNav navItems={navItems} />
       </div>
@@ -50,19 +53,22 @@ async function Hero() {
           fill="blue"
         />
       </div>
+
       <div className="flex flex-col items-center justify-center text-center">
-        <div className="dark:bg-grid-white/[0.1] bg-grid-black/[0.1] dark:bg-black-100 absolute -z-10 flex h-screen w-full items-center justify-center bg-white">
+        <div className="absolute -z-10 flex h-screen w-full items-center justify-center bg-white bg-grid-black/[0.1] dark:bg-black-100 dark:bg-grid-white/[0.1]">
           {/* Radial gradient for the container to give a faded look */}
-          <div className="dark:bg-black-100 pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-black-100"></div>
         </div>
         <h2 className="max-w-80 text-xs uppercase tracking-widest dark:text-blue-100">
           {headingsOfLandingPage.top}
         </h2>
-        <h1>
-          <TextGenerateEffect
-            className="text-[40px] md:text-5xl lg:text-6xl "
-            words={headingsOfLandingPage.h1}
-          />
+        <div>
+          <h1>
+            <TextGenerateEffect
+              className="text-[40px] md:text-5xl lg:text-6xl"
+              words={headingsOfLandingPage.h1}
+            />
+          </h1>
           <p className="mb-4 text-sm md:text-lg md:tracking-wider lg:text-2xl">
             {headingsOfLandingPage.h2}
           </p>
@@ -74,9 +80,9 @@ async function Hero() {
               otherClasses="gap-2"
             />
           </a>
-        </h1>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
