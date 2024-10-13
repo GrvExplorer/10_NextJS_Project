@@ -33,6 +33,11 @@ const sellerSchema = new mongoose.Schema({
     ref: 'Kit',
   }],
 
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+
   rating: {
     type: Number,
   },

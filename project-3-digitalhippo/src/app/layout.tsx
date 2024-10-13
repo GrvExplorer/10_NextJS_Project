@@ -1,25 +1,21 @@
+import Navbar from "@/components/shared/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 import { ReduxProvider } from "@/lib/redux";
 import { TRPCProvider } from "@/trpc/client";
-import type { Metadata } from "next";
+import { constructMetadata } from "@/utils/utils";
 import { ThemeProvider } from "next-themes";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import Script from "next/script";
 import "./_theme/index.css";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const robot = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "700", "900", "500", "300", "100"],
+  variable: "--font-roboto",
+});
 
-// const robot = Roboto({
-//   subsets: ["latin"],
-//   weight: ["400", "700", "900", "500"],
-//   variable: "--font-roboto",
-// });
-
-export const metadata: Metadata = {
-  title: "Auth JS",
-  description: "System for authentication in NextJS",
-};
+export const metadata = constructMetadata();
 
 export default function RootLayout({
   children,
@@ -29,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-      <body className={inter.className}>
+      <body className={robot.className}>
         <Toaster />
 
         <ThemeProvider
@@ -39,7 +35,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TRPCProvider>
-            <ReduxProvider>{children}</ReduxProvider>
+            <ReduxProvider>
+              <Navbar />
+              {children}
+            </ReduxProvider>
           </TRPCProvider>
         </ThemeProvider>
       </body>

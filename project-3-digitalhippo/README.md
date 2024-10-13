@@ -8,22 +8,28 @@
 
 # My Learning
 
-### Further development
+  ### Further development
+  - seller product details can add to **draft** then upload for selling on marketplace
+
+  ### My Progress
+  -
+
+  ### TODO's
+  - sign in user 
+  - make him seller
+  - add product details && list 
+  - use can add product to cart
 
 
-### My Progress
+  ### Reuse components
+  - 
 
 
-
-### TODO's
-
-
-### Get Started
+  ### Get Started
 
 
 # Acknowledgments
-
-
+- [Digital Hippo](https://www.youtube.com/watch?v=06g6YJ6JCJU&t=211s)
 
 # Feedback for me
 

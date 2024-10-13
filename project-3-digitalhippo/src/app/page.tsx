@@ -1,11 +1,22 @@
-import Users from "@/components/shared/Users";
-import { trpc } from "@/trpc/server";
+import Hero from "@/components/shared/Hero";
+import { default as Navbar } from "@/components/shared/Navbar";
+import Offers from "@/components/shared/Offers";
 
 export default async function Home() {
-  void trpc.user.userList.prefetch();
-
   return (
-    <main>
+    <main className="">
+      <Hero />
+      {/* <Offers /> */}
+
+      {/* New assets */}
+
+      {/* UI Kits */}
+
+      {/* icon packs */}
+      
+      {/* website templates */}
+
+      {/* Components templates */}
     </main>
   );
 }
