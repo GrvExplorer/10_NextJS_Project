@@ -17,6 +17,7 @@ export default async function Home() {
       {/* website templates */}
 
       {/* Components templates */}
+
     </main>
   );
 }

@@ -12,10 +12,11 @@
   - seller product details can add to **draft** then upload for selling on marketplace
 
   ### My Progress
-  -
+    - sign in user 
+    -
 
   ### TODO's
-  - sign in user 
+
   - make him seller
   - add product details && list 
   - use can add product to cart

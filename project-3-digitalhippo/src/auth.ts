@@ -16,12 +16,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async jwt({ token, user }) {
       if (user) {
+        token.seller = user.seller as boolean;
       }
       return token;
     },
     async session({ session, token, user }) {
       if (token) {
         session.user.token = token;
+        session.user.seller = token.seller as boolean;
       }
       return session;
     },

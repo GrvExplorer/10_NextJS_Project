@@ -3,6 +3,7 @@ import { DefaultSession } from "next-auth";
 
 export type ExtendedUser = DefaultSession["user"] & {
   token?: JWT;
+  seller: boolean;
 };
 
 declare module "next-auth" {
@@ -13,6 +14,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       token?: JWT;
+      seller: boolean
     } & DefaultSession["user"];
   }
 }

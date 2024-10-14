@@ -51,9 +51,13 @@ const MongooseAdapter = (
       let newname = data.email.split("@")[0];
       if (data.name === undefined) {
         if (newname.length > 6) {
-        newname = newname.substring(0, 6);
+          newname = newname.substring(0, 6);
         }
         data.name = newname;
+      }
+
+      if (data.image === undefined) {
+        data.image = `https://avatar.iran.liara.run/username?username=${data.name}`;
       }
       await dbConnect;
       const user = await User.create(data);

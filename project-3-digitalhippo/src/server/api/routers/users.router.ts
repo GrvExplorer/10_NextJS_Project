@@ -1,6 +1,7 @@
 import dbConnection from "@/db";
 import User from "@/models/user.model";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc";
+import { BecomeSellerProp } from "@/types/user.type";
 
 export const userRouter = createTRPCRouter({
   userList: publicProcedure.query(async () => {
@@ -9,4 +10,6 @@ export const userRouter = createTRPCRouter({
 
     return users;
   }),
+  becomeSeller: publicProcedure.mutation(async ({req, headers}) => {
+  }
 });

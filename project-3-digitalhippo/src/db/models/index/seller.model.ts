@@ -13,7 +13,7 @@ const sellerSchema = new mongoose.Schema({
   address: {
     type: String,
   },
-  phone: {
+  phoneNo: {
     type: String,
   },
   email: {

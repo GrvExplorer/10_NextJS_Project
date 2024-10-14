@@ -14,15 +14,15 @@ import { notFound } from "next/navigation";
 import { useState } from "react";
 import { FcSettings } from "react-icons/fc";
 import { MdLogout } from "react-icons/md";
-import UserAvatar from "../custom ui/user-avatar";
-import LogoutButton from "./logout-button";
-import ManageAccountButton from "./manage-account-button";
+import UserAvatar from "./user-avatar";
+import LogoutButton from "../auth/logout-button";
+import ManageAccountButton from "../auth/manage-account-button";
 
 interface UserButtonProps {
   mode?: "redirect" | "modal";
 }
 
-function UserButton({ mode = "redirect" }: UserButtonProps) {
+function UserButton({ mode = "modal" }: UserButtonProps) {
   const user = useCurrentUser();
 
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -41,17 +41,17 @@ function UserButton({ mode = "redirect" }: UserButtonProps) {
       <DropdownMenuTrigger asChild>
         {/* FIXME: Shimmer avatar here */}
         <div className="">
-          {/* {user.name && user.image && user.email && ( */}
+          {user.name && user.image && user.email && (
             <UserAvatar userImage={user.image} userName={user.name} userEmail={user.email} />
-          {/* )} */}
+          )}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="mt-2 w-80 rounded-xl">
         <DropdownMenuLabel>
           <div className="flex gap-4">
-            {/* {user.name && user.image && user.email && ( */}
+            {user.name && user.image && user.email && (
               <UserAvatar userImage={user.image} userName={user.name} userEmail={user.email} />
-            {/* )} */}
+            )}
 
             <div className="flex flex-col">
               <p className="font-medium">{user?.name}</p>

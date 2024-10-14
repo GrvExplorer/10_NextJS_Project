@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === "development") {
     global.__db = mongoose.connect(process.env.DATABASE_URL, options);
   }
   dbConnection = global.__db;
-  
+  console.log("Using development database");
 } else {
   dbConnection = mongoose.connect(process.env.DATABASE_URL, options);
 }

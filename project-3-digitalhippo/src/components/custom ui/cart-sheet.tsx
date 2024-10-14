@@ -4,6 +4,7 @@ import {
   SheetClose,
   SheetContent,
   SheetHeader,
+  SheetOverlay,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
@@ -17,6 +18,7 @@ function CartSheet({ children }: { children: React.ReactNode }) {
       <SheetTrigger asChild>
         <Button variant="ghost">{children}</Button>
       </SheetTrigger>
+
       <SheetContent>
         <SheetHeader className="mt-0 flex flex-row items-start justify-between">
           <SheetTitle>Cart</SheetTitle>
@@ -26,6 +28,7 @@ function CartSheet({ children }: { children: React.ReactNode }) {
           </SheetClose>
         </SheetHeader>
         <DropdownMenuSeparator className="h-[2px]" />
+
         <div className="flex h-full w-full flex-col items-center justify-center gap-4 py-4">
           <Image
             src={"/hippo-empty-cart.png"}
@@ -44,6 +47,8 @@ function CartSheet({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </SheetContent>
+
+      <SheetOverlay />
     </Sheet>
   );
 }

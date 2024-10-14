@@ -50,10 +50,6 @@ function UserAvatar({
       )}
       <AvatarFallback>
         {getInitials(userName)}
-        {/* <img
-          src={`https://avatar.iran.liara.run/username?username=${userName}`}
-          alt=""
-        /> */}
       </AvatarFallback>
     </Avatar>
   );
