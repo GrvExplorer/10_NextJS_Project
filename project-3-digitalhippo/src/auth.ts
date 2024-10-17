@@ -3,6 +3,7 @@ import NextAuth from "next-auth";
 import resend from "next-auth/providers/resend";
 import dbConnection from "./db";
 import MongooseAdapter from "./db/mongoose-adpater";
+import { trpc } from "./trpc/server";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
@@ -20,9 +21,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token, }) {
       if (token) {
-        session.user.token = token;
+        session.user.id = token.sub as string;
         session.user.seller = token.seller as boolean;
       }
       return session;

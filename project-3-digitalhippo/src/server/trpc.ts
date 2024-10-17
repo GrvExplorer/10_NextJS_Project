@@ -1,13 +1,17 @@
-import { initTRPC } from '@trpc/server';
-import { NextRequest } from 'next/server';
-import { ZodError } from 'zod';
+import { auth } from "@/auth";
+import { initTRPC, TRPCError } from "@trpc/server";
+import { NextRequest } from "next/server";
 import superjson from "superjson";
+import { ZodError } from "zod";
 
-export const createTRPCContext = async (opts: { headers: Headers; req: NextRequest }) => {
+export const createTRPCContext = async (opts: {
+  headers: Headers;
+  req: NextRequest;
+}) => {
   return {
     ...opts,
   };
-};;
+};
 export type TRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
@@ -17,10 +21,26 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       ...shape,
       data: {
         ...shape.data,
-        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+        zodError:
+          error.cause instanceof ZodError ? error.cause.flatten() : null,
       },
     };
   },
+});
+
+export const authedProcedure = t.procedure.use(async function (opts) {
+  const user = await auth();
+
+  if (!user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return opts.next({
+    ctx: {
+      // ✅ user value is known to be non-null now
+      user,
+    },
+  });
 });
 
 export const router = t.router;

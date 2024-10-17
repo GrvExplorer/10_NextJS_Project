@@ -4,6 +4,7 @@ import { type NextRequest } from "next/server";
 import { appRouter } from "@/server";
 import { createTRPCContext } from "@/server/trpc";
 import { env } from "process";
+import type { User } from "next-auth";
 
 const createContext = async (req: NextRequest, resHeaders: Headers) => {
   return createTRPCContext({

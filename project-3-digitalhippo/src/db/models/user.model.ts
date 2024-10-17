@@ -1,7 +1,7 @@
 import mongoose, { Model } from "mongoose";
 import type { AdapterUser } from "next-auth/adapters";
 
-const userSchema = new mongoose.Schema<AdapterUser>(
+const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema<AdapterUser>(
   },
 );
 
-const registerModel: Model<AdapterUser> = mongoose.models?.User;
+const registerModel = mongoose.models?.User;
 
 const User = registerModel || mongoose.model<AdapterUser>("User", userSchema);
 

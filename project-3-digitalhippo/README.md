@@ -13,13 +13,18 @@
 
   ### My Progress
     - sign in user 
+    - make him seller
     -
 
   ### TODO's
 
-  - make him seller
+
   - add product details && list 
   - use can add product to cart
+  - user can purchase kits
+
+  - verify seller using email 
+  - seller profile (logo, banner, ...other)
 
 
   ### Reuse components
