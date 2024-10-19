@@ -38,12 +38,61 @@ export const becomeSellerSchema = z.object({
   userId: z.string(),
   name: z.string(),
   address: z.string(),
-  phoneNo: z.string()
-  // .min(10, { message: "Phone number must be at least 10 digits." }).max(10, {message: 'Phone number must be at most 10 digits.'})
-  ,
-  email: z.string().email({message: 'Enter a valid email address.'}),
-  description: z.string()
-  .max(500, {message: 'Description must be at most 500 characters.'}),
-  logo: z.string().optional(),
-  banner: z.string().optional(),
+  phoneNo: z
+    .string()
+    .min(10, { message: "Phone number must be at least 10 digits." })
+    .max(10, { message: "Phone number must be at most 10 digits." }),
+  email: z.string().email({ message: "Enter a valid email address." }),
+  description: z
+    .string()
+    .min(100, { message: "Description must be at least 100 characters." })
+    .max(500, { message: "Description must be at most 500 characters." }),
+  logoUrl: z.string().optional(),
+  bannerUrl: z.string().optional(),
+});
+
+export const updateSellerSchema = z.object({
+  userId: z.string(),
+  name: z.string().optional(),
+  address: z.string().optional(),
+  phoneNo: z.string().optional(),
+  email: z
+    .string()
+    .email({ message: "Enter a valid email address." })
+    .optional(),
+  description: z.string().optional(),
+  logoUrl: z.string().optional(),
+  bannerUrl: z.string().optional(),
+});
+
+// Product
+export const addKitSchema = z.object({
+  productName: z
+    .string({ message: "Name is required." })
+    .min(3, { message: "Name must be at least 3 characters." }),
+  features: z
+    .array(z.string())
+    .min(4, { message: "Features must be at least 4." }),
+  description: z.string().optional(),
+  price: z
+    .number({ message: "Price is required." })
+    .min(0, { message: "Price must be at least 0." }),
+  images: z.array(z.string()).optional(),
+  category: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  sellerId: z.string(),
+  isPublished: z.boolean().optional(),
+});
+
+export const updateKitSchema = z.object({
+  id: z.string(),
+  productName: z.string().optional(),
+  features: z.array(z.string()).optional(),
+  description: z.string().optional(),
+  price: z.number().optional(),
+  images: z.array(z.string()).optional(),
+  category: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  sellerId: z.string(),
+  isPublished: z.boolean().optional(),
 });

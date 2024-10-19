@@ -34,8 +34,8 @@ export const userRouter = createTRPCRouter({
         phoneNo,
         email,
         description,
-        logo,
-        banner,
+        logoUrl,
+        bannerUrl,
       } = req.input;
 
       if (userId !== req.ctx.user.user.id) {
@@ -49,12 +49,19 @@ export const userRouter = createTRPCRouter({
       const sellerExists = await Seller.findOne({ user: userId });
 
       if (sellerExists) {
-        if (!sellerExists.verified) {
+        if (sellerExists.status === "archived") {
           return {
             success: false,
             status: 400,
             error:
               "User already registered as a seller && will be verified soon",
+          };
+        }
+        if (sellerExists.status === "canceled") {
+          return {
+            success: false,
+            status: 400,
+            error: "You have been prohibited from selling on our platform",
           };
         }
         return {
@@ -71,8 +78,8 @@ export const userRouter = createTRPCRouter({
         phoneNo,
         email,
         description,
-        logo,
-        banner,
+        logoUrl,
+        bannerUrl,
       });
 
       if (!seller) {

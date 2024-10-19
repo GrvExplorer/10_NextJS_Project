@@ -20,6 +20,7 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 
+// FIXME: make this form useable for update of seller details also.
 function BecomeSellerForm() {
   const user = useCurrentUser();
   const { mutateAsync: submitDetails, data } =
@@ -29,13 +30,22 @@ function BecomeSellerForm() {
     resolver: zodResolver(becomeSellerSchema),
     defaultValues: {
       userId: user?.id || "",
-      logo: "",
-      banner: "",
+      logoUrl: "",
+      bannerUrl: "",
     },
   });
 
   const onSubmit = (data: z.infer<typeof becomeSellerSchema>) => {
     submitDetails(data);
+    form.reset({
+      name: "",
+      address: "",
+      phoneNo: "",
+      email: "",
+      description: "",
+      logoUrl: "",
+      bannerUrl: "",
+    });
   };
 
   return (
@@ -104,10 +114,7 @@ function BecomeSellerForm() {
               <FormLabel className="text-lg">Phone Number</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
                   className="h-10"
-                  // min={10}
-                  // max={10}
                   placeholder="enter business phone number"
                   {...field}
                 />
@@ -165,11 +172,11 @@ function BecomeSellerForm() {
 
         <FormField
           control={form.control}
-          name="logo"
+          name="logoUrl"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-lg">Business Logo</FormLabel>
-              <FormControl>{/* upload logo here */}</FormControl>
+              <FormControl>{/* upload logoUrl here */}</FormControl>
               <FormDescription>
                 This is your public display logo.
               </FormDescription>
@@ -180,7 +187,7 @@ function BecomeSellerForm() {
 
         <FormField
           control={form.control}
-          name="banner"
+          name="bannerUrl"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-lg">Business Banner</FormLabel>

@@ -1,49 +1,61 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
-const sellerSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  address: {
-    type: String,
-  },
-  phoneNo: {
-    type: String,
-  },
-  email: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
-  logo: {
-    type: String,
-  },
-  banner: {
-    type: String,
-  },
-  kits: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Kit',
-  }],
+enum SellerStatus {
+  ACTIVE = "active",
+  CANCELED = "canceled",
+  ARCHIVED = "archived",
+}
 
-  verified: {
-    type: Boolean,
-    default: false,
-  },
+const sellerSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+    },
+    phoneNo: {
+      type: String,
+    },
+    email: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+    logoUrl: {
+      type: String,
+    },
+    bannerUrl: {
+      type: String,
+    },
+    kits: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Kit",
+      },
+    ],
 
-  rating: {
-    type: Number,
-  },
-}, {
-  timestamps: true,
-});
+    status: {
+      type: String,
+      enum: Object.values(SellerStatus),
+      default: SellerStatus.ARCHIVED,
+    },
 
-export const Seller = mongoose.models?.Seller || mongoose.model('Seller', sellerSchema);
-  
+    rating: {
+      type: Number,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+export const Seller =
+  mongoose.models?.Seller || mongoose.model("Seller", sellerSchema);

@@ -24,21 +24,14 @@ export function ProductsTable({
   products,
   offset,
   totalProducts,
+  productsPerPage,
 }: {
-  products: {
-    id: number;
-    name: string;
-    status: string;
-    stock: number;
-    price: number;
-    imageUrl: string;
-    availableAt: Date;
-  }[];
+  products: any[];
   offset: number;
   totalProducts: number;
+  productsPerPage: number;
 }) {
   let router = useRouter();
-  let productsPerPage = 5;
 
   function prevPage() {
     router.back();
@@ -51,9 +44,9 @@ export function ProductsTable({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Products</CardTitle>
+        <CardTitle>Sellers</CardTitle>
         <CardDescription>
-          Manage your products and view their sales performance.
+          Manage your seller and their seller status.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -61,23 +54,19 @@ export function ProductsTable({
           <TableHeader>
             <TableRow>
               <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
+                <span className="">Logo</span>
               </TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Price</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Total Sales
-              </TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
+              <TableHead className="hidden md:table-cell">Created At</TableHead>
               <TableHead>
-                <span className="sr-only">Actions</span>
+                <span className="y">Actions</span>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
-              <Product key={product.id} product={product} />
+            {products.map((product, i) => (
+              <Product key={i} product={product} />
             ))}
           </TableBody>
         </Table>

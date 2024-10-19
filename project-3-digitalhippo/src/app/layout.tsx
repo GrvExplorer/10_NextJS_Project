@@ -42,11 +42,7 @@ export default async function RootLayout({
           <TRPCProvider>
             <ReduxProvider>
               <SessionProvider session={user}>
-                <div className="grid h-screen grid-rows-[auto_1fr_auto]">
-                  <Navbar />
-                  {children}
-                  <Footer />
-                </div>
+              {children}
               </SessionProvider>
             </ReduxProvider>
           </TRPCProvider>

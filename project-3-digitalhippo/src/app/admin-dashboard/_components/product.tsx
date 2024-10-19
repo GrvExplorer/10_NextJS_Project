@@ -1,4 +1,5 @@
-import { Badge } from "@/components/ui/badge";
+'use client'
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,44 +8,38 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { StatusDropdown } from "@/components/ui/status-dropdown";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { trpc } from '@/trpc/client'
 import { MoreHorizontal } from "lucide-react";
-import Image from "next/image";
 
-export function Product({
-  product,
-}: {
-  product: {
-    id: number;
-    name: string;
-    status: string;
-    stock: number;
-    price: number;
-    imageUrl: string;
-    availableAt: Date;
-  };
-}) {
+export function Product({ product }: { product: any }) {
+
+  const { mutate } = trpc.seller.changeStatus.useMutation()
+
   return (
     <TableRow>
       <TableCell className="hidden sm:table-cell">
-        <Image
-          alt="Product image"
+        {/* <Image
+          alt="Business logo"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={product.imageUrl}
+          src={product.logoUrl}
           width="64"
-        />
+        /> */}
       </TableCell>
       <TableCell className="font-medium">{product.name}</TableCell>
       <TableCell>
-        <Badge variant="outline" className="capitalize">
-          {product.status}
-        </Badge>
+        <StatusDropdown
+          id={product._id}
+          status={product.status}
+          statusArray={["active", "archived", "canceled"]}
+          mutationFn={mutate}
+          queryKeys={["seller", "all"]}
+        />
       </TableCell>
-      <TableCell className="hidden md:table-cell">{`$${product.price}`}</TableCell>
-      <TableCell className="hidden md:table-cell">{product.stock}</TableCell>
       <TableCell className="hidden md:table-cell">
-        {product.availableAt.toLocaleDateString("en-US")}
+        {new Date(product.createdAt).toLocaleDateString()}
       </TableCell>
       <TableCell>
         <DropdownMenu>

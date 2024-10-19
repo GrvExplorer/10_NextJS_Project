@@ -1,7 +1,7 @@
 /**
  *
  */
-export const publicRoutes = ["/", '/pages/about', '/about'];
+export const publicRoutes = ["/"];
 
 export const authRoutes = ["/sign-in", "/error", "/verify-request"];
 

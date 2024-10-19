@@ -3,6 +3,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { NextRequest } from "next/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { appRouter } from ".";
 
 export const createTRPCContext = async (opts: {
   headers: Headers;

@@ -26,9 +26,14 @@ const kitSchema = new mongoose.Schema(
       },
     ],
 
+    // FIXME: sub schema can be created here
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
+    },
+
+    tags: {
+      type: [String],
     },
 
     seller: {
@@ -42,6 +47,11 @@ const kitSchema = new mongoose.Schema(
         ref: "Order",
       },
     ],
+
+    isPublished: {
+      type: Boolean,
+      default: false,
+    },
 
     reviews: [
       {

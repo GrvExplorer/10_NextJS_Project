@@ -1,7 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "@/server/trpc";
 import { z } from "zod";
 
-export const webhooksRouter = createTRPCRouter({
+export const webhookRouter = createTRPCRouter({
   captured: publicProcedure
     .input(
       z.object({

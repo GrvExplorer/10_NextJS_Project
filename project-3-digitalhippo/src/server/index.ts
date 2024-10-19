@@ -1,10 +1,12 @@
 import { createHTTPServer } from '@trpc/server/adapters/standalone';
 
-import { userRouter } from "@/server/api/routers/users.router";
+import { userRouter } from "@/server/api/routers/user.router";
 import { router } from "./trpc";
-import { webhooksRouter } from './api/routers/webhooks.router';
+import { webhookRouter } from './api/routers/webhook.router';
+import { sellerRouter } from './api/routers/seller.router';
 export const appRouter = router({
   user: userRouter,
-  webhooks: webhooksRouter,
+  seller: sellerRouter,
+  webhooks: webhookRouter,
 });
 export type AppRouter = typeof appRouter;

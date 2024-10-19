@@ -14,7 +14,8 @@
   ### My Progress
     - sign in user 
     - make him seller
-    -
+    - see seller status in admin panel & change status
+    - add product details & update product details in backend side
 
   ### TODO's
 

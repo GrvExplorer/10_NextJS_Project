@@ -1,49 +1,40 @@
-import Link from 'next/link';
-import {
-  Home,
-  LineChart,
-  Package,
-  Package2,
-  PanelLeft,
-  Settings,
-  ShoppingCart,
-  Users2
-} from 'lucide-react';
-
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
-import { Analytics } from '@vercel/analytics/react';
-import { User } from './_components/user';
-import { VercelLogo } from '@/components/icons';
-import Providers from './_components/providers';
-import { NavItem } from './_components/nav-item';
-import { SearchInput } from './_components/search';
-import { currentUser } from '@/utils/auth.util';
-import { notFound } from 'next/navigation';
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { currentUser } from "@/utils/auth.util";
+import { PanelLeft, Settings } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { FaJediOrder, FaProductHunt, FaSellcast } from "react-icons/fa";
+import { GiCustodianHelmet } from "react-icons/gi";
+import { SiPlausibleanalytics } from "react-icons/si";
+import { NavItem } from "./_components/nav-item";
+import Providers from "./_components/providers";
+import { SearchInput } from "./_components/search";
+import { User } from "./_components/user";
 
 export default async function DashboardLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
-
   const user = await currentUser();
 
   if (user?.email !== process.env.ADMIN_EMAIL) {
-    return notFound()
+    return notFound();
   }
 
   return (
@@ -57,11 +48,10 @@ export default async function DashboardLayout({
             <SearchInput />
             <User />
           </header>
-          <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
+          <main className="grid flex-1 items-start gap-2 bg-muted/40 p-4 sm:px-6 sm:py-0 md:gap-4">
             {children}
           </main>
         </div>
-        <Analytics />
       </main>
     </Providers>
   );
@@ -73,30 +63,30 @@ function DesktopNav() {
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
           href="/"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold md:h-8 md:w-8 md:text-base"
         >
-          <VercelLogo className="h-3 w-3 transition-all group-hover:scale-110" />
-          <span className="sr-only">Acme Inc</span>
+          <Image src="/favicon.ico" alt="Hippo" width={32} height={32} />
+          <span className="sr-only">Hippo</span>
         </Link>
 
-        <NavItem href="#" label="Dashboard">
-          <Home className="h-5 w-5" />
+        <NavItem href="#" label="Seller">
+          <FaSellcast className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="#" label="Orders">
-          <ShoppingCart className="h-5 w-5" />
+          <FaJediOrder className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/" label="Products">
-          <Package className="h-5 w-5" />
+          <FaProductHunt className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="/admin-dashboard/customers" label="Customers">
-          <Users2 className="h-5 w-5" />
+          <GiCustodianHelmet className="h-5 w-5" />
         </NavItem>
 
         <NavItem href="#" label="Analytics">
-          <LineChart className="h-5 w-5" />
+          <SiPlausibleanalytics className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -130,44 +120,44 @@ function MobileNav() {
         <nav className="grid gap-6 text-lg font-medium">
           <Link
             href="#"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full  text-lg font-semibold  md:text-base"
           >
-            <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-            <span className="sr-only">Vercel</span>
+            <Image src="/favicon.ico" alt="Hippo" width={32} height={32} />
+            <span className="sr-only">Hippo</span>
           </Link>
           <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <Home className="h-5 w-5" />
-            Dashboard
+            <FaSellcast className="h-5 w-5" />
+            Seller
           </Link>
           <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <ShoppingCart className="h-5 w-5" />
+            <FaJediOrder className="h-5 w-5" />
             Orders
           </Link>
           <Link
             href="#"
-            className="flex items-center gap-4 px-2.5 text-foreground"
+            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <Package className="h-5 w-5" />
+            <FaProductHunt className="h-5 w-5" />
             Products
           </Link>
           <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <Users2 className="h-5 w-5" />
+            <GiCustodianHelmet className="h-5 w-5" />
             Customers
           </Link>
           <Link
             href="#"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <LineChart className="h-5 w-5" />
+            <Settings className="h-5 w-5" />
             Settings
           </Link>
         </nav>
@@ -193,7 +183,7 @@ function DashboardBreadcrumb() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>All Products</BreadcrumbPage>
+          <BreadcrumbPage>All Sellers</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

@@ -1,39 +1,24 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { trpc } from "@/trpc/client";
 import { File, PlusCircle } from "lucide-react";
 import { ProductsTable } from "./_components/products-table";
 
-export default async function ProductsPage({
+export default function ProductsPage({
   searchParams,
 }: {
   searchParams: { q: string; offset: string };
 }) {
   const search = searchParams.q ?? "";
   const offset = searchParams.offset ?? 0;
-  const { products, newOffset, totalProducts } = {
-    products: [
-      {
-        id: 1,
-        name: "test",
-        status: "pending",
-        price: 10,
-        stock: 10,
-        imageUrl: "https://picsum.photos/200",
-        availableAt: new Date(),
-      },
+  const { data, isLoading } = trpc.seller.all.useQuery();
 
-      {
-        id: 2,
-        name: "test",
-        status: "shipping",
-        price: 10,
-        stock: 10,
-        imageUrl: "https://picsum.photos/300",
-        availableAt: new Date(),
-      },
-    ],
-    newOffset: 0,
-    totalProducts: 2,
+  const { sellers, count, offset: newOffset, limit } = data ?? {
+    sellers: [],
+    count: 0,
+    offset: 0,
+    limit: 5,
   };
 
   return (
@@ -42,7 +27,7 @@ export default async function ProductsPage({
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="draft">Draft</TabsTrigger>
+          <TabsTrigger value="draft">Canceled</TabsTrigger>
           <TabsTrigger value="archived" className="hidden sm:flex">
             Archived
           </TabsTrigger>
@@ -63,11 +48,19 @@ export default async function ProductsPage({
         </div>
       </div>
       <TabsContent value="all">
-        <ProductsTable
-          products={products}
-          offset={newOffset ?? 0}
-          totalProducts={totalProducts}
-        />
+        {isLoading ? (
+          <div className="flex h-full items-center justify-center">
+            {" "}
+            <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-gray-900"></div>{" "}
+          </div>
+        ) : (
+          <ProductsTable
+            products={sellers}
+            offset={newOffset ?? 0}
+            totalProducts={count}
+            productPerPage={limit}
+          />
+        )}
       </TabsContent>
     </Tabs>
   );
