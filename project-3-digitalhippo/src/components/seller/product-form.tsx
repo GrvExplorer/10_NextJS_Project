@@ -1,6 +1,7 @@
 "use client";
+
 import { useCurrentUser } from "@/app/_hooks/auth.hooks";
-import { becomeSellerSchema } from "@/schemas";
+import { addKitSchema } from "@/schemas";
 import { trpc } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -20,31 +21,30 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 
-// FIXME: make this form useable for update of seller details also.
-function BecomeSellerForm() {
+function ProductForm({ mode }: { mode: "add" | "update" }) {
   const user = useCurrentUser();
-  const { mutateAsync: submitDetails, data } =
-    trpc.user.becomeSeller.useMutation();
 
-  const form = useForm<z.infer<typeof becomeSellerSchema>>({
-    resolver: zodResolver(becomeSellerSchema),
+  const { mutate: submitDetails, data } = trpc.seller.addKit.useMutation();
+
+  const form = useForm<z.infer<typeof addKitSchema>>({
+    resolver: zodResolver(addKitSchema),
     defaultValues: {
-      userId: user?.id || "",
-      logoUrl: "",
-      bannerUrl: "",
+      sellerId: user?.sellerId || "",
+      toPublish: true,
     },
   });
 
-  const onSubmit = (data: z.infer<typeof becomeSellerSchema>) => {
+  const onSubmit = (data: z.infer<typeof addKitSchema>) => {
     submitDetails(data);
     form.reset({
-      name: "",
-      address: "",
-      phoneNo: "",
-      email: "",
+      productName: "",
+      features: [],
       description: "",
-      logoUrl: "",
-      bannerUrl: "",
+      price: 0,
+      images: [],
+      category: "",
+      tags: [],
+      toPublish: true,
     });
   };
 
@@ -53,7 +53,7 @@ function BecomeSellerForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="mb-4 space-y-4">
         <FormField
           control={form.control}
-          name="userId"
+          name="sellerId"
           render={({ field }) => (
             <FormItem>
               <FormControl>
@@ -66,83 +66,19 @@ function BecomeSellerForm() {
 
         <FormField
           control={form.control}
-          name="name"
+          name="productName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Business Name</FormLabel>
+              <FormLabel className="text-lg">Kit Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="enter business name"
+                  placeholder="Name you product"
                   className="h-10"
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-lg">Address</FormLabel>
-              <FormControl>
-                <Textarea
-                  rows={3}
-                  placeholder="enter business address"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                This is your public display address.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="phoneNo"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-lg">Phone Number</FormLabel>
-              <FormControl>
-                <Input
-                  className="h-10"
-                  placeholder="enter business phone number"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                This is your public display number.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-lg">Business Email</FormLabel>
-              <FormControl>
-                <Input
-                  className="h-10"
-                  type="email"
-                  placeholder="enter business email"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                This is your public display email.
+                This is your public display name of the product.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -154,11 +90,11 @@ function BecomeSellerForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Business Description</FormLabel>
+              <FormLabel className="text-lg">Description</FormLabel>
               <FormControl>
                 <Textarea
-                  rows={2}
-                  placeholder="enter business description"
+                  rows={3}
+                  placeholder="enter description of product"
                   {...field}
                 />
               </FormControl>
@@ -172,13 +108,19 @@ function BecomeSellerForm() {
 
         <FormField
           control={form.control}
-          name="logoUrl"
+          name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Business Logo</FormLabel>
-              <FormControl>{/* upload logoUrl here */}</FormControl>
+              <FormLabel className="text-lg">Price</FormLabel>
+              <FormControl>
+                <Input
+                  className="h-10"
+                  placeholder="enter the price of product"
+                  {...field}
+                />
+              </FormControl>
               <FormDescription>
-                This is your public display logo.
+                This is your public display price.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -187,13 +129,59 @@ function BecomeSellerForm() {
 
         <FormField
           control={form.control}
-          name="bannerUrl"
+          name="images"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Business Banner</FormLabel>
-              <FormControl>{/* upload banner here */}</FormControl>
+              <FormLabel className="text-lg">Upload Images</FormLabel>
+              <FormControl>{/* upload preview pictures here */}</FormControl>
               <FormDescription>
-                This is your public display banner.
+                This is your public display picture of product.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-lg">Add Category</FormLabel>
+              <FormControl>{/* option to add category */}</FormControl>
+              <FormDescription>
+                Add category your product belongs to.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-lg">Add Tags</FormLabel>
+              <FormControl>{/* option to add tags */}</FormControl>
+              <FormDescription>
+                tags your product it belongs to.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="toPublish"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-lg">Publish to public</FormLabel>
+              <FormControl>{/* option to on & off */}</FormControl>
+              <FormDescription>
+                If option is selected, your product will be visible to all
+                users.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -213,4 +201,4 @@ function BecomeSellerForm() {
   );
 }
 
-export default BecomeSellerForm;
+export default ProductForm;

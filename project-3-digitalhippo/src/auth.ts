@@ -15,17 +15,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async signIn({ user, account }) {
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user }) {      
+      console.log("🚀 ~ file: auth.ts:19 ~ jwt ~ token:", token)
+      console.log("🚀 ~ file: auth.ts:19 ~ jwt ~ user:", user)
+
       if (user) {
-        token.seller = user.seller as boolean;
+        token.isSeller = user.isSeller as boolean;
+        token.sellerId = user.sellerId as string;
       }
       return token;
     },
     async session({ session, token, }) {
+      console.log("🚀 ~ file: auth.ts:26 ~ session ~ session:", session)
+
       if (token) {
         session.user.id = token.sub as string;
-        session.user.seller = token.seller as boolean;
+        session.user.isSeller = token.isSeller as boolean;
+        session.user.sellerId = token.sellerId as string;
       }
+      
       return session;
     },
   },

@@ -90,6 +90,8 @@ const MongooseAdapter = (
 
       // Find User
       const user = await adaptorMethods.getUser(account.userId);
+      console.log("🚀 ~ file: mongoose-adpater.ts:93 ~ getUserByAccount ~ user:", user)
+
       return user;
     },
     async updateUser(data) {

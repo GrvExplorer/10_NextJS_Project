@@ -93,7 +93,7 @@ export const sellerRouter = createTRPCRouter({
       category,
       tags,
       sellerId,
-      isPublished,
+      toPublish,
     } = req.input;
 
     const { ctx } = req;
@@ -128,7 +128,6 @@ export const sellerRouter = createTRPCRouter({
       images,
       tags,
       seller: sellerId,
-      isPublished,
     });
 
     if (!createKit)
@@ -148,6 +147,10 @@ export const sellerRouter = createTRPCRouter({
       { new: true },
     );
 
+    if (toPublish) {
+      // TODO: publish kit
+    }
+
     return {
       success: true,
       status: 201,
@@ -165,7 +168,7 @@ export const sellerRouter = createTRPCRouter({
       category,
       tags,
       sellerId,
-      isPublished,
+      toPublish,
       id,
     } = req.input;
 
@@ -204,7 +207,6 @@ export const sellerRouter = createTRPCRouter({
         price,
         images,
         tags,
-        isPublished,
       },
       {
         new: true,
@@ -217,6 +219,10 @@ export const sellerRouter = createTRPCRouter({
         status: 500,
         error: "Not able to update Kit details try again",
       };
+
+    if (toPublish) {
+      // TODO: implement publish
+    }
 
     return {
       success: true,

@@ -81,7 +81,7 @@ export const addKitSchema = z.object({
   category: z.string().optional(),
   tags: z.array(z.string()).optional(),
   sellerId: z.string(),
-  isPublished: z.boolean().optional(),
+  toPublish: z.boolean().optional(),
 });
 
 export const updateKitSchema = z.object({
@@ -94,5 +94,5 @@ export const updateKitSchema = z.object({
   category: z.string().optional(),
   tags: z.array(z.string()).optional(),
   sellerId: z.string(),
-  isPublished: z.boolean().optional(),
+  toPublish: z.boolean().optional(),
 });

@@ -1,4 +1,4 @@
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 import type { AdapterUser } from "next-auth/adapters";
 
 const userSchema = new mongoose.Schema(
@@ -19,9 +19,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    seller: {
+    isSeller: {
       type: Boolean,
       default: false,
+    },
+    sellerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Seller",
     },
     cartItems: [
       {

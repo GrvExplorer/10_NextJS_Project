@@ -72,7 +72,7 @@ export const userRouter = createTRPCRouter({
       }
 
       const seller = await Seller.create({
-        user: req.ctx.user.user.id,
+        userId: req.ctx.user.user.id,
         name,
         address,
         phoneNo,
@@ -81,6 +81,8 @@ export const userRouter = createTRPCRouter({
         logoUrl,
         bannerUrl,
       });
+
+      await User.findByIdAndUpdate(userId, { isSeller: true, sellerId: seller._id });
 
       if (!seller) {
         return {

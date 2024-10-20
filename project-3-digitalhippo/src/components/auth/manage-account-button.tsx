@@ -34,7 +34,10 @@ function ManageAccountButton({
   asChild,
 }: ManageAccountProps) {
   const user = useCurrentUser();
+  
   const [labelIconActive, setLabelIconActive] = useState("profile");
+
+  if (!user) return <></>
 
   if (mode === "redirect") {
     return <span>TODO: Implement Model</span>;
@@ -78,10 +81,12 @@ function ManageAccountButton({
                       {/* FIXME: Add user image can be updated by user onclick */}
                       <UserAvatar
                         userName={user?.name!}
-                        userImage={user?.image}
-                        userEmail={user?.email}
+                        userImage={user?.image!}
+                        userEmail={user?.email!}
                       />
-                      {user?.name}
+                      {user?.name}  {
+                        user.isSeller && '( seller )'
+                      }
                     </p>
                   </div>
                   <DropdownMenuSeparator />
