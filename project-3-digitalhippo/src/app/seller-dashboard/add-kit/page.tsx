@@ -1,4 +1,4 @@
-import UpdateProductForm from "@/components/seller/product-form";
+import AddProductForm from "../_components/product-form";
 import { Card } from "@/components/ui/card";
 
 function page() {
@@ -8,7 +8,7 @@ function page() {
         Add kit for sale
       </h1>
       <Card className="px-4 py-2">
-        <UpdateProductForm mode="update" />
+        <AddProductForm mode="add" />
       </Card>
     </div>
   );

@@ -1,4 +1,4 @@
-import BecomeSellerForm from "@/components/seller/seller-form";
+import BecomeSellerForm from "@/app/seller-dashboard/_components/seller-form";
 import { Card } from "@/components/ui/card";
 
 function page() {

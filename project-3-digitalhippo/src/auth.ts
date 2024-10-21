@@ -16,18 +16,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
     async jwt({ token, user }) {      
-      console.log("🚀 ~ file: auth.ts:19 ~ jwt ~ token:", token)
-      console.log("🚀 ~ file: auth.ts:19 ~ jwt ~ user:", user)
-
       if (user) {
         token.isSeller = user.isSeller as boolean;
         token.sellerId = user.sellerId as string;
       }
       return token;
     },
-    async session({ session, token, }) {
-      console.log("🚀 ~ file: auth.ts:26 ~ session ~ session:", session)
-
+    async session({ session, token, user }) {
       if (token) {
         session.user.id = token.sub as string;
         session.user.isSeller = token.isSeller as boolean;

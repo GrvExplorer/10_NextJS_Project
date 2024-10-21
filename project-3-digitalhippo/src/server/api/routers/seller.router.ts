@@ -98,7 +98,7 @@ export const sellerRouter = createTRPCRouter({
 
     const { ctx } = req;
 
-    if (ctx.user.user.id !== sellerId) {
+    if (ctx.user.user.sellerId !== sellerId) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
 

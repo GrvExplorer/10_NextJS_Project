@@ -75,7 +75,7 @@ export const addKitSchema = z.object({
     .min(4, { message: "Features must be at least 4." }),
   description: z.string().optional(),
   price: z
-    .number({ message: "Price is required." })
+    .string({ message: "Price is required." })
     .min(0, { message: "Price must be at least 0." }),
   images: z.array(z.string()).optional(),
   category: z.string().optional(),
@@ -89,7 +89,7 @@ export const updateKitSchema = z.object({
   productName: z.string().optional(),
   features: z.array(z.string()).optional(),
   description: z.string().optional(),
-  price: z.number().optional(),
+  price: z.string().optional(),
   images: z.array(z.string()).optional(),
   category: z.string().optional(),
   tags: z.array(z.string()).optional(),

@@ -1,21 +1,16 @@
 // TODO: TYPE TO BE FIXED
-import { DefaultSession } from "next-auth";
+import { AdapterUser, DefaultSession } from "next-auth";
 
-export type ExtendedUser = DefaultSession["user"] & {
-  token?: JWT;
+export interface ExtendedUser extends AdapterUser {
   isSeller: boolean;
   sellerId: string;
 };
 
 declare module "next-auth" {
-  interface AdapterUser extends ExtendedUser {
-    isSeller: boolean;
-    sellerId: string;
-  }
+  interface AdapterUser extends ExtendedUser  {} 
 
   interface Session {
     user: {
-      token?: JWT;
       isSeller: boolean;
       sellerId: string;
     } & DefaultSession["user"];

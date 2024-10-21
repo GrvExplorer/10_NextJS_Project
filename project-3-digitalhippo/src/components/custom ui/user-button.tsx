@@ -10,13 +10,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useCurrentUser } from "@/hooks/auth.hooks";
+import { ShieldAlert } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import { FcSettings } from "react-icons/fc";
 import { MdLogout } from "react-icons/md";
-import UserAvatar from "./user-avatar";
 import LogoutButton from "../auth/logout-button";
 import ManageAccountButton from "../auth/manage-account-button";
+import UserAvatar from "./user-avatar";
 
 interface UserButtonProps {
   mode?: "redirect" | "modal";
@@ -24,6 +26,7 @@ interface UserButtonProps {
 
 function UserButton({ mode = "modal" }: UserButtonProps) {
   const user = useCurrentUser();
+  console.log("🚀 ~ file: user-button.tsx:27 ~ UserButton ~ user:", user);
 
   const [openDropdown, setOpenDropdown] = useState(false);
   if (user === undefined) return notFound();
@@ -42,7 +45,11 @@ function UserButton({ mode = "modal" }: UserButtonProps) {
         {/* FIXME: Shimmer avatar here */}
         <div className="">
           {user.name && user.image && user.email && (
-            <UserAvatar userImage={user.image} userName={user.name} userEmail={user.email} />
+            <UserAvatar
+              userImage={user.image}
+              userName={user.name}
+              userEmail={user.email}
+            />
           )}
         </div>
       </DropdownMenuTrigger>
@@ -50,7 +57,11 @@ function UserButton({ mode = "modal" }: UserButtonProps) {
         <DropdownMenuLabel>
           <div className="flex gap-4">
             {user.name && user.image && user.email && (
-              <UserAvatar userImage={user.image} userName={user.name} userEmail={user.email} />
+              <UserAvatar
+                userImage={user.image}
+                userName={user.name}
+                userEmail={user.email}
+              />
             )}
 
             <div className="flex flex-col">
@@ -76,6 +87,19 @@ function UserButton({ mode = "modal" }: UserButtonProps) {
             <p className="">Manage Account</p>
           </div>
         </ManageAccountButton>
+
+        <DropdownMenuSeparator />
+
+        {user.isSeller && (
+          <Link href={"/seller-dashboard"}>
+            <DropdownMenuItem className="flex cursor-pointer gap-8 px-4 py-2">
+              <p className="">
+                <ShieldAlert />
+              </p>
+              <p className="text-lg">Seller</p>
+            </DropdownMenuItem>
+          </Link>
+        )}
 
         <DropdownMenuSeparator />
 

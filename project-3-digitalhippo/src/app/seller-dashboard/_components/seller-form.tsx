@@ -1,14 +1,14 @@
 "use client";
-
+import { logout } from "@/app/_actions/auth.action";
 import { useCurrentUser } from "@/app/_hooks/auth.hooks";
-import { addKitSchema } from "@/schemas";
+import { becomeSellerSchema } from "@/schemas";
 import { trpc } from "@/trpc/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import FormError from "../custom ui/form-error";
-import FormSuccess from "../custom ui/form-success";
-import { Button } from "../ui/button";
+import FormError from "@/components/custom ui/form-error";
+import FormSuccess from "@/components/custom ui/form-success";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,34 +17,45 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
 
-function ProductForm({ mode }: { mode: "add" | "update" }) {
+// FIXME: make this form useable for update of seller details also.
+function SellerForm({ mode }: { mode: "become" | "update" }) {
   const user = useCurrentUser();
+  const { toast } = useToast();
+  const { mutateAsync: submitDetails, data } =
+    trpc.user.becomeSeller.useMutation();
 
-  const { mutate: submitDetails, data } = trpc.seller.addKit.useMutation();
-
-  const form = useForm<z.infer<typeof addKitSchema>>({
-    resolver: zodResolver(addKitSchema),
+  const form = useForm<z.infer<typeof becomeSellerSchema>>({
+    resolver: zodResolver(becomeSellerSchema),
     defaultValues: {
-      sellerId: user?.sellerId || "",
-      toPublish: true,
+      userId: user?.id || "",
+      logoUrl: "",
+      bannerUrl: "",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof addKitSchema>) => {
-    submitDetails(data);
+  const onSubmit = (data: z.infer<typeof becomeSellerSchema>) => {
+    submitDetails(data).then((res) => {
+      if (res.success) {
+        toast({
+          title: "Success",
+          description: "You need to login again to access seller dashboard",
+        });
+        logout();
+      }
+    });
     form.reset({
-      productName: "",
-      features: [],
+      name: "",
+      address: "",
+      phoneNo: "",
+      email: "",
       description: "",
-      price: 0,
-      images: [],
-      category: "",
-      tags: [],
-      toPublish: true,
+      logoUrl: "",
+      bannerUrl: "",
     });
   };
 
@@ -53,7 +64,7 @@ function ProductForm({ mode }: { mode: "add" | "update" }) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="mb-4 space-y-4">
         <FormField
           control={form.control}
-          name="sellerId"
+          name="userId"
           render={({ field }) => (
             <FormItem>
               <FormControl>
@@ -66,19 +77,83 @@ function ProductForm({ mode }: { mode: "add" | "update" }) {
 
         <FormField
           control={form.control}
-          name="productName"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Kit Name</FormLabel>
+              <FormLabel className="text-lg">Business Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Name you product"
+                  placeholder="enter business name"
                   className="h-10"
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                This is your public display name of the product.
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-lg">Address</FormLabel>
+              <FormControl>
+                <Textarea
+                  rows={3}
+                  placeholder="enter business address"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                This is your public display address.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phoneNo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-lg">Phone Number</FormLabel>
+              <FormControl>
+                <Input
+                  className="h-10"
+                  placeholder="enter business phone number"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                This is your public display number.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-lg">Business Email</FormLabel>
+              <FormControl>
+                <Input
+                  className="h-10"
+                  type="email"
+                  placeholder="enter business email"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                This is your public display email.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -90,11 +165,11 @@ function ProductForm({ mode }: { mode: "add" | "update" }) {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Description</FormLabel>
+              <FormLabel className="text-lg">Business Description</FormLabel>
               <FormControl>
                 <Textarea
-                  rows={3}
-                  placeholder="enter description of product"
+                  rows={2}
+                  placeholder="enter business description"
                   {...field}
                 />
               </FormControl>
@@ -108,19 +183,13 @@ function ProductForm({ mode }: { mode: "add" | "update" }) {
 
         <FormField
           control={form.control}
-          name="price"
+          name="logoUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Price</FormLabel>
-              <FormControl>
-                <Input
-                  className="h-10"
-                  placeholder="enter the price of product"
-                  {...field}
-                />
-              </FormControl>
+              <FormLabel className="text-lg">Business Logo</FormLabel>
+              <FormControl>{/* upload logoUrl here */}</FormControl>
               <FormDescription>
-                This is your public display price.
+                This is your public display logo.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -129,59 +198,13 @@ function ProductForm({ mode }: { mode: "add" | "update" }) {
 
         <FormField
           control={form.control}
-          name="images"
+          name="bannerUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Upload Images</FormLabel>
-              <FormControl>{/* upload preview pictures here */}</FormControl>
+              <FormLabel className="text-lg">Business Banner</FormLabel>
+              <FormControl>{/* upload banner here */}</FormControl>
               <FormDescription>
-                This is your public display picture of product.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-lg">Add Category</FormLabel>
-              <FormControl>{/* option to add category */}</FormControl>
-              <FormDescription>
-                Add category your product belongs to.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-lg">Add Tags</FormLabel>
-              <FormControl>{/* option to add tags */}</FormControl>
-              <FormDescription>
-                tags your product it belongs to.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="toPublish"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-lg">Publish to public</FormLabel>
-              <FormControl>{/* option to on & off */}</FormControl>
-              <FormDescription>
-                If option is selected, your product will be visible to all
-                users.
+                This is your public display banner.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -201,4 +224,4 @@ function ProductForm({ mode }: { mode: "add" | "update" }) {
   );
 }
 
-export default ProductForm;
+export default SellerForm;

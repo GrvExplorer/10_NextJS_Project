@@ -1,5 +1,7 @@
+import { NavItem } from "@/components/custom ui/nav-item";
 import Providers from "@/components/custom ui/providers";
 import { SearchInput } from "@/components/custom ui/search";
+import UserButton from "@/components/custom ui/user-button";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,9 +24,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FaJediOrder, FaProductHunt, FaSellcast } from "react-icons/fa";
 import { GiCustodianHelmet } from "react-icons/gi";
-import { SiPlausibleanalytics } from "react-icons/si";
-import { NavItem } from "../../components/custom ui/nav-item";
-import { User } from "./_components/user";
 
 export default async function DashboardLayout({
   children,
@@ -33,9 +32,9 @@ export default async function DashboardLayout({
 }) {
   const user = await currentUser();
 
-  if (user?.email !== process.env.ADMIN_EMAIL) {
-    return notFound();
-  }
+  if (!user) notFound();
+
+  if (user.isSeller === false) notFound();
 
   return (
     <Providers>
@@ -46,7 +45,7 @@ export default async function DashboardLayout({
             <MobileNav />
             <DashboardBreadcrumb />
             <SearchInput />
-            <User />
+            {/* TODO: Create Seller Button */}
           </header>
           <main className="grid flex-1 items-start gap-2 bg-muted/40 p-4 sm:px-6 sm:py-0 md:gap-4">
             {children}
@@ -69,31 +68,27 @@ function DesktopNav() {
           <span className="sr-only">Hippo</span>
         </Link>
 
-        <NavItem href="#" label="Seller">
+        <NavItem href="/seller-dashboard" label="Dashboard">
           <FaSellcast className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Orders">
+        <NavItem href="/seller-dashboard/add-kit" label="Add Product">
           <FaJediOrder className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/" label="Products">
+        <NavItem href="/seller-dashboard/analytics" label="Analytics">
           <FaProductHunt className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/admin-dashboard/customers" label="Customers">
+        <NavItem href="/seller-dashboard/reviews" label="Reviews">
           <GiCustodianHelmet className="h-5 w-5" />
-        </NavItem>
-
-        <NavItem href="#" label="Analytics">
-          <SiPlausibleanalytics className="h-5 w-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="#"
+              href="/seller-dashboard/settings"
               className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
             >
               <Settings className="h-5 w-5" />
@@ -130,31 +125,31 @@ function MobileNav() {
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <FaSellcast className="h-5 w-5" />
-            Seller
+            Dashboard
           </Link>
           <Link
-            href="#"
+            href="/seller-dashboard/add-kit"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <FaJediOrder className="h-5 w-5" />
-            Orders
+            Add Product
           </Link>
           <Link
-            href="#"
+            href="/seller-dashboard/analytics"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <FaProductHunt className="h-5 w-5" />
-            Products
+            Analytics
           </Link>
           <Link
-            href="#"
+            href="/seller-dashboard/reviews"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <GiCustodianHelmet className="h-5 w-5" />
-            Customers
+            Reviews
           </Link>
           <Link
-            href="#"
+            href="/seller-dashboard/settings"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <Settings className="h-5 w-5" />
