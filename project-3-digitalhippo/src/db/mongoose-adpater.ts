@@ -2,10 +2,10 @@ import mongoose, { Model, Mongoose } from "mongoose";
 import type {
   Adapter,
   AdapterAccount,
-  AdapterUser,
   VerificationToken as AdapterVerificationToken,
 } from "next-auth/adapters";
 import { AdapterSession } from "next-auth/adapters";
+import { AdapterUser } from "./models/user.model";
 
 interface MongooseAdapterModels {
   user?: Model<AdapterUser>;

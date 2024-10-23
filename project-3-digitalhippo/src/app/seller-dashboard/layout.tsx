@@ -25,7 +25,7 @@ import { notFound } from "next/navigation";
 import { FaJediOrder, FaProductHunt, FaSellcast } from "react-icons/fa";
 import { GiCustodianHelmet } from "react-icons/gi";
 
-export default async function DashboardLayout({
+export default async function SellerDashboardLayout({
   children,
 }: {
   children: React.ReactNode;

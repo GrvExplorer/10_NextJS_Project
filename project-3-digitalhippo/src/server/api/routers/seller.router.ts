@@ -1,3 +1,4 @@
+import { Category } from "@/db/models/index/category.model";
 import { Kit } from "@/db/models/index/kit.model";
 import { Seller } from "@/db/models/index/seller.model";
 import { addKitSchema, updateKitSchema, updateSellerSchema } from "@/schemas";
@@ -86,12 +87,12 @@ export const sellerRouter = createTRPCRouter({
   addKit: authedProcedure.input(addKitSchema).mutation(async (req) => {
     const {
       productName,
-      features,
       description,
       price,
       images,
-      category,
+      features,
       tags,
+      category,
       sellerId,
       toPublish,
     } = req.input;
@@ -118,17 +119,47 @@ export const sellerRouter = createTRPCRouter({
       };
     }
 
-    // FIXME: add category
+    // FIXME: add category, tags, features
 
     const createKit = await Kit.create({
       productName,
-      features,
       description,
       price,
       images,
+      features,
       tags,
       seller: sellerId,
     });
+
+    if (category) {
+      const getCategory = await Category.find({ name: { $in: category } });
+
+      const categoryExists = getCategory.length === category.length;
+
+      if (!categoryExists) {
+        category.map(async (v, i) => {
+          if (getCategory[i].name === v) {
+            return v;
+          } else {
+            await Category.create({
+              name: v,
+            });
+          }
+        });
+
+        const allCategoryOfKit = await Category.find({
+          name: { $in: category },
+        });
+
+        await Kit.findOneAndUpdate(createKit._id, {
+          $push: allCategoryOfKit.map((v) => v._id),
+        });
+      }
+
+      await Kit.findOneAndUpdate(createKit._id, {
+        $push: getCategory.map((v) => v._id),
+      });
+    }
 
     if (!createKit)
       return {
@@ -212,6 +243,36 @@ export const sellerRouter = createTRPCRouter({
         new: true,
       },
     );
+
+    if (category) {
+      const getCategory = await Category.find({ name: { $in: category } });
+
+      const categoryExists = getCategory.length === category.length;
+
+      if (!categoryExists) {
+        category.map(async (v, i) => {
+          if (getCategory[i].name === v) {
+            return v;
+          } else {
+            await Category.create({
+              name: v,
+            });
+          }
+        });
+
+        const allCategoryOfKit = await Category.find({
+          name: { $in: category },
+        });
+
+        await Kit.findOneAndUpdate(updateKit._id, {
+          $push: allCategoryOfKit.map((v) => v._id),
+        });
+      }
+
+      await Kit.findOneAndUpdate(updateKit._id, {
+        $push: getCategory.map((v) => v._id),
+      });
+    }
 
     if (!updateKit)
       return {

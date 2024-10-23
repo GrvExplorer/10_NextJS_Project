@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model, Types } from "mongoose";
 
 enum SellerStatus {
   ACTIVE = "active",
@@ -6,12 +6,27 @@ enum SellerStatus {
   ARCHIVED = "archived",
 }
 
-const sellerSchema = new mongoose.Schema(
+export interface ISeller {
+  userId: Types.ObjectId;
+  name: string;
+  address: string;
+  phoneNo: number;
+  email: string;
+  description: string;
+  logoUrl: string;
+  bannerUrl: string;
+  kits: Types.ObjectId[];
+  status: SellerStatus;
+  rating: number;
+}
+
+const sellerSchema = new mongoose.Schema<ISeller>(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      unique: true,
     },
     name: {
       type: String,
@@ -21,7 +36,7 @@ const sellerSchema = new mongoose.Schema(
       type: String,
     },
     phoneNo: {
-      type: String,
+      type: Number,
     },
     email: {
       type: String,
@@ -57,5 +72,5 @@ const sellerSchema = new mongoose.Schema(
   },
 );
 
-export const Seller =
-  mongoose.models?.Seller || mongoose.model("Seller", sellerSchema);
+export const Seller: Model<ISeller> =
+  mongoose.models?.Seller || mongoose.model<ISeller>("Seller", sellerSchema);

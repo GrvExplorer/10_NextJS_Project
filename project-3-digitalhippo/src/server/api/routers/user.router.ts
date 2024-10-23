@@ -7,13 +7,13 @@ import {
   createTRPCRouter,
   publicProcedure,
 } from "@/server/trpc";
+import mongoose, { Model } from "mongoose";
 import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
   userList: publicProcedure.query(async () => {
     await dbConnection;
     const users = await User.find({});
-
     return users;
   }),
   byEmail: publicProcedure
@@ -46,7 +46,9 @@ export const userRouter = createTRPCRouter({
         };
       }
 
-      const sellerExists = await Seller.findOne({ user: userId });
+      const sellerExists = await Seller.findOne({
+        userId,
+      });
 
       if (sellerExists) {
         if (sellerExists.status === "archived") {

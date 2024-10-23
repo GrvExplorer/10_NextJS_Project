@@ -1,19 +1,21 @@
-import { timeStamp } from "console";
-import mongoose from "mongoose";
 
-const categorySchema = new mongoose.Schema({
+import mongoose, { Model, Types } from "mongoose";
+
+export interface ICategory {
+  name: string;
+}
+
+const categorySchema = new mongoose.Schema<ICategory>({
   name: {
     type: String,
     required: true,
     unique: true,
   },
-  slug: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-}, {
-  timestamps: true,
+  // slug: {
+  //   type: String,
+  //   required: true,
+  //   unique: true,
+  // },
 });
 
-const Category = mongoose.models?.Category || mongoose.model("Category", categorySchema);
+export const Category: Model<ICategory> = mongoose.models?.Category || mongoose.model<ICategory>("Category", categorySchema);

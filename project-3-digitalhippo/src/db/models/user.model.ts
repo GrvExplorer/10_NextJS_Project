@@ -1,7 +1,17 @@
-import mongoose from "mongoose";
-import type { AdapterUser } from "next-auth/adapters";
+import mongoose, { Model, Types } from "mongoose";
+import { User as IUser } from "next-auth";
 
-const userSchema = new mongoose.Schema(
+export interface AdapterUser extends IUser {
+  id: string;
+  email: string;
+  emailVerified: Date | null;
+  isSeller: boolean;
+  sellerId: Types.ObjectId;
+  cartItems: Types.ObjectId;
+  orders: Types.ObjectId;
+}
+
+const userSchema = new mongoose.Schema<AdapterUser>(
   {
     name: {
       type: String,
@@ -12,7 +22,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     emailVerified: {
-      type: Date,
+      type: Date || null,
       trim: true,
     },
     image: {
@@ -48,6 +58,7 @@ const userSchema = new mongoose.Schema(
 
 const registerModel = mongoose.models?.User;
 
-const User = registerModel || mongoose.model<AdapterUser>("User", userSchema);
+const User: Model<AdapterUser> =
+  registerModel || mongoose.model<AdapterUser>("User", userSchema);
 
 export default User;

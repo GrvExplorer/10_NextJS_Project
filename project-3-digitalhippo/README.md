@@ -16,11 +16,12 @@
     - make him seller
     - see seller status in admin panel & change status
     - add product details & update product details in backend side
+    - add product details
 
   ### TODO's
 
 
-  - add product details && list 
+  - list product 
   - use can add product to cart
   - user can purchase kits
 

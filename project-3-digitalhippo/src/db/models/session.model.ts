@@ -1,7 +1,7 @@
 import {Model, Schema, model, models} from "mongoose";
 import type {AdapterSession} from "next-auth/adapters";
 
-// @Schema
+
 const sessionSchema = new Schema<AdapterSession>({
   expires: {
     type: Date,
@@ -19,7 +19,7 @@ const sessionSchema = new Schema<AdapterSession>({
   timestamps: true,
 });
 
-// @Model
+
 const registeredModel: Model<AdapterSession> = models?.Session;
 export default registeredModel ||
   model<AdapterSession>("Session", sessionSchema);

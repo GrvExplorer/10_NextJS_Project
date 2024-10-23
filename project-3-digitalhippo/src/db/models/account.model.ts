@@ -1,7 +1,8 @@
 import mongoose, { Model, Schema } from "mongoose";
 import type { Account } from "next-auth";
 
-// @Schema
+
+
 const accountSchema = new Schema<Account>({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -59,7 +60,6 @@ const accountSchema = new Schema<Account>({
   timestamps: true,
 });
 
-// @Model
 const registeredModel: Model<Account> = mongoose.models?.Account;
 export default registeredModel ||
   mongoose.model<Account>("Account", accountSchema);

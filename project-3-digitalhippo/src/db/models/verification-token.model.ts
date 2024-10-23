@@ -1,7 +1,6 @@
 import mongoose, { Model } from "mongoose";
 import type { VerificationToken } from "next-auth/adapters";
 
-// @Schema
 const VerificationTokenSchema = new mongoose.Schema<VerificationToken>({
   expires: {
     type: Date,
@@ -19,7 +18,7 @@ const VerificationTokenSchema = new mongoose.Schema<VerificationToken>({
   timestamps: true,
 });
 
-// @Model
+
 const registeredModel: Model<VerificationToken> =
   mongoose.models?.VerificationToken;
 

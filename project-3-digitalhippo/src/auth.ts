@@ -22,7 +22,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (token) {
         session.user.id = token.sub as string;
         session.user.isSeller = token.isSeller as boolean;

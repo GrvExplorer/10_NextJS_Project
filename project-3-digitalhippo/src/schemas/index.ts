@@ -70,15 +70,18 @@ export const addKitSchema = z.object({
   productName: z
     .string({ message: "Name is required." })
     .min(3, { message: "Name must be at least 3 characters." }),
-  features: z
-    .array(z.string())
-    .min(4, { message: "Features must be at least 4." }),
-  description: z.string().optional(),
+  description: z.string(),
   price: z
     .string({ message: "Price is required." })
     .min(0, { message: "Price must be at least 0." }),
   images: z.array(z.string()).optional(),
-  category: z.string().optional(),
+  category: z
+    .array(z.string())
+    .max(3, { message: "Max Number of category is 3" })
+    .optional(),
+  features: z
+    .array(z.string())
+    .min(4, { message: "Features must be at least 4." }).optional(),
   tags: z.array(z.string()).optional(),
   sellerId: z.string(),
   toPublish: z.boolean().optional(),
@@ -91,7 +94,10 @@ export const updateKitSchema = z.object({
   description: z.string().optional(),
   price: z.string().optional(),
   images: z.array(z.string()).optional(),
-  category: z.string().optional(),
+  category: z
+    .array(z.string())
+    .max(3, { message: "Max Number of category is 3" })
+    .optional(),
   tags: z.array(z.string()).optional(),
   sellerId: z.string(),
   toPublish: z.boolean().optional(),

@@ -1,6 +1,20 @@
-import mongoose from "mongoose";
+import mongoose, { Model, Types } from "mongoose";
 
-const kitSchema = new mongoose.Schema(
+export interface IKit {
+  productName: string;
+  features: string[];
+  description: string;
+  price: number;
+  images: string[];
+  category: Types.ObjectId[];
+  tags: string[];
+  seller: Types.ObjectId;
+  orders: Types.ObjectId[];
+  isPublished: boolean;
+  reviews: Types.ObjectId[];
+}
+
+const kitSchema = new mongoose.Schema<IKit>(
   {
     productName: {
       type: String,
@@ -26,15 +40,16 @@ const kitSchema = new mongoose.Schema(
       },
     ],
 
-    // FIXME: sub schema can be created here
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-    },
+    category: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
 
-    tags: {
-      type: [String],
-    },
+    tags: [{
+      type: String,
+    }],
 
     seller: {
       type: mongoose.Schema.Types.ObjectId,
@@ -63,4 +78,4 @@ const kitSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export const Kit = mongoose.models?.Kit || mongoose.model("Kit", kitSchema);
+export const Kit: Model<IKit> = mongoose.models?.Kit || mongoose.model<IKit>("Kit", kitSchema);

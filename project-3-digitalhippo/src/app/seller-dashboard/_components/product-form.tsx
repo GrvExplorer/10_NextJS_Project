@@ -24,7 +24,9 @@ import { Textarea } from "@/components/ui/textarea";
 function ProductForm({ mode }: { mode: "add" | "update" }) {
   const user = useCurrentUser();
 
-  const { mutateAsync: submitDetails, data } = trpc.seller.addKit.useMutation();
+  const { mutate: submitDetails, data, isPending} = trpc.seller.addKit.useMutation({
+    retryDelay: 60000
+  });
 
   const form = useForm<z.infer<typeof addKitSchema>>({
     resolver: zodResolver(addKitSchema),
@@ -38,12 +40,12 @@ function ProductForm({ mode }: { mode: "add" | "update" }) {
     submitDetails(data);
     form.reset({
       productName: "",
-      features: [],
       description: "",
       price: "",
       images: [],
-      category: "",
+      features: [],
       tags: [],
+      category: [],
       toPublish: true,
     });
   };
@@ -145,6 +147,21 @@ function ProductForm({ mode }: { mode: "add" | "update" }) {
 
         <FormField
           control={form.control}
+          name="features"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-lg">Add Features</FormLabel>
+              <FormControl>{/* option to add category */}</FormControl>
+              <FormDescription>
+                Will be displayed in numerical order.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="category"
           render={({ field }) => (
             <FormItem>
@@ -193,7 +210,7 @@ function ProductForm({ mode }: { mode: "add" | "update" }) {
         <FormError message={data?.error} />
 
         <div className="flex justify-end">
-          <Button type="submit" className="px-6 py-2">
+          <Button type="submit" className="px-6 py-2" disabled={isPending}>
             Submit
           </Button>
         </div>

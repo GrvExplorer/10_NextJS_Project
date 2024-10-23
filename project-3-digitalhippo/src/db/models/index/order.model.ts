@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model, Types } from "mongoose";
 
 enum OrderStatus {
   PENDING = "pending",
@@ -8,18 +8,26 @@ enum OrderStatus {
   CANCELLED = "cancelled",
 }
 
-const orderSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+export interface IOrder {
+  user: Types.ObjectId;
+  kits: Types.ObjectId[];
+  status: OrderStatus;
+  total: number;
+  shippingAddress: string;
+  shippingPrice: number;
+  paymentMethod: string;
+  paymentReference: string;
+  isPaid: boolean;
+  createdAt: Date;
+}
+
+const orderSchema = new mongoose.Schema<IOrder>({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  kit: [{
+  kits: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "kit",
     required: true,
@@ -58,3 +66,5 @@ const orderSchema = new mongoose.Schema({
     default: Date.now,
   },
 })
+
+export const Order: Model<IOrder> = mongoose.models?.Order || mongoose.model<IOrder>('Order', orderSchema)
